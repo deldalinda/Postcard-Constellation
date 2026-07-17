@@ -511,6 +511,7 @@ main { position: fixed; inset: 0; z-index: 5; }
 }
 .pb-corner { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 .pb-stamp {
+  position: relative; /* anchors the face-zoom crop (see panel.js) */
   width: 56px;
   height: 68px;
   border: 2px dashed #b3a373; /* perforation */
