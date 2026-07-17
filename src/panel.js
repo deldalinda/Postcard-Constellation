@@ -63,9 +63,10 @@ export function initPanel(data, { onShowJourney, onClose, onLightbox }) {
     // Adobe bug). Surfacing the page number keeps the reference usable even when
     // the reader lands on page 1.
     const pdfPage = (m?.url?.match(/#page=(\d+)/) || [])[1];
+    const facePos = /^face:/.test(p.portraitPosition || "");
     const stamp = p.portrait
       ? `<img class="pb-portrait" src="${thumb(p.portrait)}" data-full="${p.portrait}" alt="Portrait of ${p.name}"${
-          p.portraitPosition ? ` style="object-position:${p.portraitPosition}"` : ""
+          p.portraitPosition && !facePos ? ` style="object-position:${p.portraitPosition}"` : ""
         } />`
       : `<span class="pb-stamp-art" aria-hidden="true">&#9993;</span>`;
     return `
@@ -141,6 +142,31 @@ export function initPanel(data, { onShowJourney, onClose, onLightbox }) {
       stampPortrait.addEventListener("click", () => {
         showPhotos([{ src: stampPortrait.dataset.full, preview: thumb(stampPortrait.dataset.full) }], 0);
       });
+      // portraitPosition "face:FX% FY% Z" recrops IN THE STAMP ONLY (the jpg is
+      // untouched; the lightbox above still shows the whole photo): the image is
+      // scaled Z× beyond cover-fit and slid so the face at (FX,FY)% of the photo
+      // sits at the stamp's centre, clamped so no gaps show at the edges.
+      const fp = /^face:\s*([\d.]+)%\s+([\d.]+)%\s+([\d.]+)\s*$/.exec(p.portraitPosition || "");
+      if (fp) {
+        const fx = +fp[1] / 100, fy = +fp[2] / 100, z = +fp[3];
+        const box = stampPortrait.parentElement; // .pb-stamp
+        const place = () => {
+          const iw = stampPortrait.naturalWidth, ih = stampPortrait.naturalHeight;
+          if (!iw || !ih) return;
+          const w = box.clientWidth, h = box.clientHeight;
+          const s = Math.max(w / iw, h / ih) * z;
+          const W = iw * s, H = ih * s;
+          const ox = Math.min(0, Math.max(w - W, w / 2 - fx * W));
+          const oy = Math.min(0, Math.max(h - H, h / 2 - fy * H));
+          Object.assign(stampPortrait.style, {
+            position: "absolute", width: W + "px", height: H + "px",
+            left: ox + "px", top: oy + "px", maxWidth: "none",
+            objectFit: "fill", objectPosition: "0 0",
+          });
+        };
+        if (stampPortrait.complete) place();
+        stampPortrait.addEventListener("load", place); // also re-place after a thumb→full fallback
+      }
     }
     content.querySelector("#btn-journey").addEventListener("click", () => onShowJourney(p.id));
 

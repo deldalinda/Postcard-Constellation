@@ -470,6 +470,7 @@ export function initGlobe(container, data, onSelect) {
       globe.globeTileEngineUrl(null);
     }
   }
+  let arcsShown = true;
   function updateTilesForZoom() {
     const d = controls.getDistance();
     if (!tilesOn && d < TILES_ON_DIST) setTiles(true);
