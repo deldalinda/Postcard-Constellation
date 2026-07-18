@@ -138,3 +138,87 @@ const preselect = params.get("p");
 if (preselect && byId.has(preselect)) selectParticipant(preselect);
 const preview = params.get("v");
 if (preview && views[preview]) showView(preview);
+
+// Contest guess form. With a Web3Forms access key configured, the card's CTA
+// opens an in-app form that emails the guess directly; without one, the CTA
+// keeps its plain mailto behaviour so the exhibition never has a dead button.
+const GUESS_FORM_KEY = "2ed573b0-9420-49d8-9bb2-e0fc28d95427";
+const guessModal = document.getElementById("guess-modal");
+if (GUESS_FORM_KEY && guessModal) {
+  const cta = document.querySelector("#mystery-card .mc-cta");
+  const form = document.getElementById("gm-form");
+  const done = document.getElementById("gm-done");
+  const note = form.querySelector(".gm-note");
+  const send = form.querySelector(".gm-send");
+  const noteText = note.textContent;
+  const close = () => { guessModal.hidden = true; };
+  cta.addEventListener("click", (e) => {
+    e.preventDefault();
+    form.hidden = false;
+    done.hidden = true;
+    note.textContent = noteText;
+    note.classList.remove("gm-error");
+    guessModal.hidden = false;
+    document.getElementById("gm-email").focus();
+  });
+  document.getElementById("gm-close").addEventListener("click", close);
+  guessModal.addEventListener("click", (e) => { if (e.target === guessModal) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !guessModal.hidden && !e.defaultPrevented) { e.preventDefault(); close(); }
+  });
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    send.disabled = true;
+    send.textContent = "Sending…";
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: GUESS_FORM_KEY,
+          subject: "Postcard Constellation — contest guess",
+          from_name: "Postcard Constellation",
+          email: document.getElementById("gm-email").value,
+          message: document.getElementById("gm-guess").value,
+        }),
+      });
+      const out = await res.json();
+      if (!out.success) throw new Error(out.message || "send failed");
+      form.hidden = true;
+      done.hidden = false;
+    } catch {
+      note.textContent = "Hmm, that didn't send — please try again, or email deldal@gmail.com directly.";
+      note.classList.add("gm-error");
+    } finally {
+      send.disabled = false;
+      send.innerHTML = "&#10022;&nbsp; Send my guess";
+    }
+  });
+}
+
+// Mystery-card fallback: mailto silently fails for visitors without a mail
+// app, so the address itself is a click-to-copy button.
+const mcCopy = document.getElementById("mc-copy");
+if (mcCopy) {
+  const address = mcCopy.textContent;
+  mcCopy.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(address);
+    } catch {
+      // Clipboard API needs a secure context (the site runs on http until
+      // the certificate lands) — fall back to the legacy copy command.
+      const ta = document.createElement("textarea");
+      ta.value = address;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      ta.remove();
+    }
+    mcCopy.textContent = "copied ✓";
+    mcCopy.classList.add("copied");
+    setTimeout(() => {
+      mcCopy.textContent = address;
+      mcCopy.classList.remove("copied");
+    }, 1600);
+  });
+}
