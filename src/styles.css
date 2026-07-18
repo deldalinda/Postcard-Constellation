@@ -330,6 +330,7 @@ main { position: fixed; inset: 0; z-index: 5; }
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
+  line-height: 1.9;
   font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.22em;
@@ -788,8 +789,8 @@ main { position: fixed; inset: 0; z-index: 5; }
 /* ---- mystery challenge card (Constellations view only) ---- */
 #mystery-card {
   position: absolute;
-  top: 26px;
-  right: 26px;
+  left: 26px;
+  bottom: 26px;
   width: 330px;
   padding: 20px 22px 22px;
   background: rgba(20, 19, 59, 0.88);
