@@ -55,6 +55,8 @@
           Send us your guess by <strong>20 August</strong> &mdash; correct answers enter a
           draw to win an envelope full of postcards from Linda.</p>
         <a class="mc-cta" href="mailto:deldal@gmail.com?subject=My%20guess%20%E2%80%94%20Postcard%20Constellation">&#10022;&nbsp; Send your guess</a>
+        <p class="mc-alt">or copy the address:
+          <button id="mc-copy" type="button">deldal@gmail.com</button></p>
       </aside>
       <div class="view-hint">Every line is something shared<br />click a name to hear their voice</div>
     </section>
@@ -84,6 +86,31 @@
       <a href="https://postcardstothefrontcanada.com/contact/">Contact</a>
     </nav>
   </details>
+
+  <!-- Contest guess form: shown instead of the mailto flow once a relay key
+       is configured (GUESS_FORM_KEY in main.js). -->
+  <div id="guess-modal" hidden>
+    <div class="gm-card">
+      <button id="gm-close" aria-label="Close">&times;</button>
+      <p class="mc-eyebrow">This month&rsquo;s mystery</p>
+      <p class="gm-title">What do these stars share?</p>
+      <form id="gm-form">
+        <label class="gm-label" for="gm-email">Your email</label>
+        <input id="gm-email" name="email" type="email" required placeholder="you@example.com" />
+        <label class="gm-label" for="gm-guess">Your guess</label>
+        <textarea id="gm-guess" name="message" required rows="3"
+          placeholder="I think the hidden thread is&hellip;"></textarea>
+        <button class="gm-send" type="submit">&#10022;&nbsp; Send my guess</button>
+        <p class="gm-note">Correct answers enter a draw for an envelope full of postcards.
+          Your email is used only to reach the winner.</p>
+      </form>
+      <div id="gm-done" hidden>
+        <p class="gm-done-star">&#10022;</p>
+        <p class="gm-title">Your guess is on its way!</p>
+        <p class="gm-note">Good luck &mdash; the draw takes place after 20 August.</p>
+      </div>
+    </div>
+  </div>
 
   <div id="lightbox" hidden>
     <figure>
