@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Postcard Constellation — Postcards to the Front</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <canvas id="starfield"></canvas>
+
+  <header id="topbar">
+    <div class="brand">
+      <h1>Postcard Constellation</h1>
+      <p class="tagline">Postcards to the Front &mdash; voices &amp; journeys</p>
+    </div>
+    <nav id="view-toggle" role="tablist">
+      <button id="btn-globe" class="active" role="tab" aria-selected="true">Trails</button>
+      <button id="btn-constellation" role="tab" aria-selected="false">Constellations</button>
+      <button id="btn-starlight" role="tab" aria-selected="false">Starlights</button>
+    </nav>
+  </header>
+
+  <div id="display-controls" aria-label="Display options">
+    <label class="switch"><input type="checkbox" id="tg-names" checked /><span>Participant names</span></label>
+    <label class="switch"><input type="checkbox" id="tg-cities" checked /><span>Place names</span></label>
+    <label class="switch"><input type="checkbox" id="tg-countries" /><span>Country borders</span></label>
+    <label class="switch"><input type="checkbox" id="tg-day" /><span>Daylight globe</span></label>
+  </div>
+
+  <div id="zoom-control" aria-label="Zoom">
+    <button id="zoom-in" aria-label="Zoom in">+</button>
+    <input id="zoom-range" type="range" min="0" max="1000" value="650" aria-label="Zoom level" />
+    <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+  </div>
+
+  <main>
+    <section id="globe-view" class="view active">
+      <div id="globe"></div>
+      <div class="view-hint">Drag to spin the globe &middot; click a glowing city to meet its writer</div>
+    </section>
+
+    <section id="constellation-view" class="view">
+      <canvas id="constellation"></canvas>
+      <div class="view-hint">Every line is something shared &middot; click a name to hear their voice</div>
+    </section>
+
+    <section id="starlight-view" class="view">
+      <div id="starlight"></div>
+    </section>
+  </main>
+
+  <aside id="panel" aria-hidden="true">
+    <button id="panel-close" aria-label="Close">&times;</button>
+    <div id="panel-content"></div>
+  </aside>
+
+  <div id="lightbox" hidden>
+    <figure>
+      <img id="lightbox-img" alt="Postcard, enlarged" />
+      <figcaption id="lightbox-cap"></figcaption>
+    </figure>
+  </div>
+
+
+  <script>
+    // Browsers block the app's modules and data files on file:// pages, so
+    // explain how to launch it properly instead of showing a blank sky.
+    if (location.protocol === "file:") {
+      document.addEventListener("DOMContentLoaded", function () {
+        var note = document.createElement("div");
+        note.style.cssText =
+          "position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;" +
+          "background:rgba(20,19,59,0.96);padding:24px;text-align:center;";
+        note.innerHTML =
+          '<div style="max-width:560px;font-family:Georgia,serif;color:#eceafb;">' +
+          '<h2 style="font-size:30px;font-weight:500;margin-bottom:14px;">One more step&hellip;</h2>' +
+          '<p style="font-size:19px;line-height:1.6;">The exhibition can&rsquo;t run straight from the file &mdash; ' +
+          "your browser blocks its data and videos for security. Instead, double-click " +
+          '<strong>&ldquo;Start Exhibition.command&rdquo;</strong> in the same folder. ' +
+          "It starts a tiny local server and opens the exhibition for you.</p></div>";
+        document.body.appendChild(note);
+      });
+    }
+  </script>
+  <!-- defer: parse the page without blocking on the 1.8 MB globe bundle;
+       deferred scripts run in order, so `Globe` exists before main.js -->
+  <script src="vendor/globe.gl.min.js" defer></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
