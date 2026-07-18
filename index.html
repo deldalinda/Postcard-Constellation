@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Postcard Constellation — Postcards to the Front</title>
+  <title>Postcard Constellation — An Interactive Exhibition of Postcards to the Front Project</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -18,7 +18,7 @@
   <header id="topbar">
     <div class="brand">
       <h1>Postcard Constellation</h1>
-      <p class="tagline">Postcards to the Front &mdash; voices &amp; journeys</p>
+      <p class="tagline">An Interactive Exhibition of Postcards to the Front Project</p>
     </div>
     <nav id="view-toggle" role="tablist">
       <button id="btn-globe" class="active" role="tab" aria-selected="true">Trails</button>
@@ -60,6 +60,22 @@
     <button id="panel-close" aria-label="Close">&times;</button>
     <div id="panel-content"></div>
   </aside>
+
+  <!-- Site menu: the exhibition lives on its own page, so it carries its own
+       way back to the rest of postcardstothefrontcanada.com. Pure CSS toggle. -->
+  <details id="site-menu">
+    <summary>&#9776;&nbsp; Postcards to the Front</summary>
+    <nav class="site-menu-card">
+      <p class="sm-wordmark">Postcards to the Front</p>
+      <p class="sm-tagline">Canada &middot; &#1050;&#1072;&#1085;&#1072;&#1076;&#1072;</p>
+      <a href="https://postcardstothefrontcanada.com">Home</a>
+      <a href="https://postcardstothefrontcanada.com/project-history/">Project History</a>
+      <a href="https://postcardstothefrontcanada.com/about-us/">About the Canada Branch</a>
+      <a href="https://postcardstothefrontcanada.com/blog-archives/">Blog Archives</a>
+      <a href="https://postcardstothefrontcanada.com/international-newsletter">International Newsletters</a>
+      <a href="https://postcardstothefrontcanada.com/contact/">Contact</a>
+    </nav>
+  </details>
 
   <div id="lightbox" hidden>
     <figure>
