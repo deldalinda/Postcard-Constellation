@@ -196,6 +196,30 @@ if (GUESS_FORM_KEY && guessModal) {
   });
 }
 
+// The site menu closes when the visitor clicks anywhere outside it.
+const siteMenu = document.getElementById("site-menu");
+if (siteMenu) {
+  document.addEventListener("click", (e) => {
+    if (siteMenu.open && !siteMenu.contains(e.target)) siteMenu.open = false;
+  });
+}
+
+// Mystery card collapse: minimizes to a small pill so the sky stays visible
+// (collapsed by default on narrow screens, open on wide; remembered per tab).
+const mystCard = document.getElementById("mystery-card");
+const mystPill = document.getElementById("mystery-pill");
+if (mystCard && mystPill) {
+  const setCollapsed = (c) => {
+    mystCard.hidden = c;
+    mystPill.hidden = !c;
+    sessionStorage.setItem("mystery-collapsed", c ? "1" : "0");
+  };
+  document.getElementById("mc-min").addEventListener("click", () => setCollapsed(true));
+  mystPill.addEventListener("click", () => setCollapsed(false));
+  const stored = sessionStorage.getItem("mystery-collapsed");
+  setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1080px)").matches);
+}
+
 // Mystery-card fallback: mailto silently fails for visitors without a mail
 // app, so the address itself is a click-to-copy button.
 const mcCopy = document.getElementById("mc-copy");

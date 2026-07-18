@@ -52,13 +52,16 @@ html, body {
   text-shadow: 0 0 22px rgba(122, 116, 226, 0.7);
 }
 #topbar .tagline {
-  font-size: 12.5px;
+  /* one line at every width: the size tracks the viewport on small screens */
+  font-size: clamp(9px, 2.45vw, 12.5px);
   font-weight: 300;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--ink-dim);
   margin-top: 4px;
 }
+#topbar .tagline em { font-style: italic; }
 
 #view-toggle {
   pointer-events: auto;
@@ -112,7 +115,7 @@ body[data-view="globe"] #display-controls { display: flex; }
   gap: 10px;
   cursor: pointer;
   user-select: none;
-  font-size: 11.5px;
+  font-size: clamp(9px, 2.7vw, 11.5px);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-dim);
@@ -330,8 +333,9 @@ main { position: fixed; inset: 0; z-index: 5; }
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
+  text-align: center;
   line-height: 1.9;
-  font-size: 12px;
+  font-size: clamp(9px, 2.6vw, 12px);
   font-weight: 300;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -487,8 +491,11 @@ main { position: fixed; inset: 0; z-index: 5; }
 }
 
 @media (max-width: 720px) {
-  #topbar { gap: 12px; }
+  #topbar { gap: 12px; padding: 16px 18px 0; }
   #topbar h1 { font-size: 24px; }
+  #topbar .tagline { letter-spacing: 0.08em; }
+  #view-toggle { gap: 4px; padding: 4px; }
+  #view-toggle button { font-size: 11px; letter-spacing: 0.07em; padding: 7px 12px; }
   #display-controls { left: 16px; bottom: 16px; padding: 12px 14px; gap: 9px; }
 }
 
@@ -583,6 +590,17 @@ main { position: fixed; inset: 0; z-index: 5; }
 #starlight-view {
   background: radial-gradient(ellipse at 50% 20%, #0b0a24 0%, #060518 60%, #030310 100%);
   overflow-y: auto;
+}
+/* The gallery scrolls beneath the fixed topbar, so in this view the topbar
+   carries a fading backdrop — tiles slip under it instead of colliding with
+   the heading text. */
+body[data-view="starlight"] #topbar {
+  right: 0;
+  padding-bottom: 30px;
+  background: linear-gradient(180deg,
+    rgba(6, 5, 24, 0.95) 0%,
+    rgba(6, 5, 24, 0.88) 62%,
+    rgba(6, 5, 24, 0) 100%);
 }
 #starlight {
   max-width: 1180px;
@@ -737,7 +755,7 @@ main { position: fixed; inset: 0; z-index: 5; }
   border: 1px solid rgba(151, 176, 230, 0.35);
   color: #f6ecc9;
   font-family: var(--sans);
-  font-size: 12px;
+  font-size: clamp(9.5px, 2.8vw, 12px);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   backdrop-filter: blur(6px);
@@ -799,6 +817,43 @@ main { position: fixed; inset: 0; z-index: 5; }
   backdrop-filter: blur(8px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
 }
+#mc-min {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  padding: 2px 6px;
+  color: rgba(183, 189, 228, 0.7);
+  cursor: pointer;
+}
+#mc-min:hover { color: #eceafb; }
+#mystery-pill {
+  position: absolute;
+  left: 26px;
+  bottom: 26px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: clamp(9.5px, 2.8vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e8c476;
+  background: rgba(20, 19, 59, 0.88);
+  border: 1px solid rgba(151, 176, 230, 0.35);
+  border-radius: 999px;
+  padding: 11px 19px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+#mystery-pill:hover { border-color: rgba(232, 196, 118, 0.7); background: rgba(26, 25, 70, 0.94); }
+/* the author display:flex above would defeat the hidden attribute without this */
+#mystery-pill[hidden] { display: none; }
 #mystery-card .mc-eyebrow {
   font-family: var(--sans);
   font-size: 11px;
@@ -858,6 +913,26 @@ main { position: fixed; inset: 0; z-index: 5; }
   cursor: pointer;
 }
 #mystery-card #mc-copy.copied { color: #9fe8b0; border-bottom-color: transparent; }
+
+/* Narrow screens: the bottom-edge layers collide, so stack them into bands.
+   Constellations: mystery card on top, hint below it, site-menu pill last.
+   Trails: display toggles on top, hint below them, site-menu pill last.
+   Wide screens keep the side-by-side row. */
+@media (max-width: 1080px) {
+  #mystery-card {
+    bottom: 132px;
+    max-width: calc(100vw - 52px);
+  }
+  /* the stacked layers all hang centred on the screen's axis */
+  .view-hint { bottom: 74px; }
+  /* width: max-content — a box placed at left:50% otherwise sizes itself
+     against the remaining half-viewport and wraps its label */
+  #display-controls { bottom: 132px; left: 50%; transform: translateX(-50%); width: max-content; }
+  #mystery-pill { bottom: 132px; left: 50%; transform: translateX(-50%); width: max-content; }
+  #mystery-card { left: 50%; transform: translateX(-50%); }
+  #site-menu { left: 50%; right: auto; transform: translateX(-50%); width: max-content; }
+  .site-menu-card { left: 50%; right: auto; transform: translateX(-50%); }
+}
 
 /* ---- contest guess modal ---- */
 #guess-modal {

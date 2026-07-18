@@ -261,7 +261,7 @@ export function initConstellation(canvas, data, onSelect) {
     a.groups.some((g) => b.groups.includes(g)) || bondPartner.get(a) === b;
 
   // --- camera -----------------------------------------------------------------
-  const cam = { rotY: 0.5, rotX: -0.15, zoom: 1 };
+  const cam = { rotY: 0.5, rotX: -0.15, zoom: 1, panX: 0, panY: 0 };
   let W = 0, H = 0, SCALE = 1;
   const FOCAL = 3.0;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -287,8 +287,8 @@ export function initConstellation(canvas, data, onSelect) {
     const z2 = y * sX + z1 * cX;
     const persp = FOCAL / (FOCAL - z2);
     return {
-      sx: W / 2 + x1 * SCALE * cam.zoom * persp,
-      sy: H * 0.52 - y2 * SCALE * cam.zoom * persp,
+      sx: W / 2 + cam.panX + x1 * SCALE * cam.zoom * persp,
+      sy: H * 0.52 + cam.panY - y2 * SCALE * cam.zoom * persp,
       depth: z2,
       persp,
     };
@@ -309,10 +309,12 @@ export function initConstellation(canvas, data, onSelect) {
   let hovered = null;
   let hoveredGroup = null; // constellation whose NAME the pointer is over
   let targetRotY = cam.rotY, targetRotX = cam.rotX, targetZoom = cam.zoom;
+  let targetPanX = 0, targetPanY = 0;
   function faceNode(n) {
     const mag = Math.hypot(n.bx, n.bz) || 1e-6;
     targetRotY = Math.atan2(-n.bx, n.bz);
     targetRotX = clamp(Math.atan2(n.by, mag), -1.2, 1.2);
+    targetPanX = 0; targetPanY = 0; // glide back to centre when focusing a star
   }
   function select(node) {
     selected = node;
@@ -343,15 +345,33 @@ export function initConstellation(canvas, data, onSelect) {
     return best;
   }
 
-  let dragging = false, dragMoved = false, lastX = 0, lastY = 0;
+  let dragging = false, panning = false, dragMoved = false, lastX = 0, lastY = 0;
   let spinResumeAt = 0; // idle auto-rotation stays paused until this timestamp
   canvas.addEventListener("pointerdown", (e) => {
+    if (e.button === 1) {
+      // Middle button "lifts" the whole cloud — a screen-space pan, as in 3D
+      // software. preventDefault stops the browser's autoscroll widget.
+      e.preventDefault();
+      panning = true; lastX = e.clientX; lastY = e.clientY;
+      canvas.setPointerCapture?.(e.pointerId);
+      canvas.style.cursor = "move";
+      return;
+    }
+    if (e.button !== 0) return;
     dragging = true; dragMoved = false; lastX = e.clientX; lastY = e.clientY;
     canvas.setPointerCapture?.(e.pointerId);
     canvas.style.cursor = "grabbing";
   });
   canvas.addEventListener("pointermove", (e) => {
     const r = canvas.getBoundingClientRect();
+    if (panning) {
+      const s = devicePixelRatio; // pan lives in canvas (device) pixels
+      cam.panX += (e.clientX - lastX) * s;
+      cam.panY += (e.clientY - lastY) * s;
+      targetPanX = cam.panX; targetPanY = cam.panY;
+      lastX = e.clientX; lastY = e.clientY; hovered = null; hoveredGroup = null;
+      return;
+    }
     if (dragging) {
       const dx = e.clientX - lastX, dy = e.clientY - lastY;
       targetRotY += dx * 0.006;
@@ -367,6 +387,11 @@ export function initConstellation(canvas, data, onSelect) {
   });
   canvas.addEventListener("pointerleave", () => { hovered = null; hoveredGroup = null; });
   canvas.addEventListener("pointerup", (e) => {
+    if (panning) {
+      panning = false; canvas.style.cursor = "grab";
+      spinResumeAt = performance.now() + 4000;
+      return;
+    }
     if (!dragging) return;
     dragging = false; canvas.style.cursor = "grab";
     spinResumeAt = performance.now() + 4000; // a click/drag freezes the drift briefly
@@ -376,6 +401,8 @@ export function initConstellation(canvas, data, onSelect) {
     if (n) { select(n); onSelect(n.p.id); }
     else { select(null); onSelect(null); }
   });
+  // Middle-click paste/autoscroll must not fire on the sky.
+  canvas.addEventListener("auxclick", (e) => { if (e.button === 1) e.preventDefault(); });
   canvas.addEventListener("wheel", (e) => {
     e.preventDefault();
     targetZoom = clamp(targetZoom * Math.exp(-e.deltaY * 0.0012), 0.55, 3);
@@ -397,6 +424,8 @@ export function initConstellation(canvas, data, onSelect) {
     cam.rotY += (targetRotY - cam.rotY) * 0.08;
     cam.rotX += (targetRotX - cam.rotX) * 0.08;
     cam.zoom += (targetZoom - cam.zoom) * 0.1;
+    cam.panX += (targetPanX - cam.panX) * 0.1;
+    cam.panY += (targetPanY - cam.panY) * 0.1;
 
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, W, H);
