@@ -6,10 +6,13 @@
 // mystery: the figure draws but its name/caption never display — visitors
 // are left to guess what the stars share (the Postcrossers release hides
 // every label that would show).
+// hidden: the figure is not drawn at all. For the August 2026 mystery
+// challenge only the Postcrossers thread shows — remove the hidden flags
+// to bring the other figures back.
 const FIGURES = [
-  { key: "makers",       name: "The Artists",      caption: "they make art",                    source: "hobby", mystery: true },
-  { key: "bookish",      name: "The Bookish",      caption: "at home with books and letters",  source: "hobby", mystery: true },
-  { key: "openair",      name: "The Open Air",     caption: "at home under open sky",           source: "hobby", mystery: true },
+  { key: "makers",       name: "The Artists",      caption: "they make art",                    source: "hobby", mystery: true, hidden: true },
+  { key: "bookish",      name: "The Bookish",      caption: "at home with books and letters",  source: "hobby", mystery: true, hidden: true },
+  { key: "openair",      name: "The Open Air",     caption: "at home under open sky",           source: "hobby", mystery: true, hidden: true },
   { key: "music",        name: "The Music-makers", caption: "song and dance",                   source: "hobby" },
   { key: "teachers",     name: "The Teachers",     caption: "teachers on both shores",          source: "profession" },
   { key: "postcrossers", name: "The Postcrossers", caption: "found through Postcrossing",        source: "foundVia", mystery: true },
@@ -70,6 +73,7 @@ export function buildConstellations(participants) {
     for (const key of figuresFor(p.publicAttrs)) members.get(key).push(p.id);
   }
   return FIGURES
+    .filter((f) => !f.hidden)
     .filter((f) => members.get(f.key).length >= 3)
     .map((f) => ({ key: f.key, name: f.name, caption: f.caption,
                    mystery: !!f.mystery, members: members.get(f.key) }));
