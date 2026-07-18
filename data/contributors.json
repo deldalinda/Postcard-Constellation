@@ -1,0 +1,64 @@
+{
+  "contributors": [
+    {
+      "name": "Angela",
+      "place": "Denmark",
+      "lat": 55.6740774,
+      "lng": 12.4694478,
+      "sentTo": "",
+      "note": "",
+      "images": [
+        "public/contributors/angela-denmark.jpg"
+      ]
+    },
+    {
+      "name": "Desiree",
+      "place": "Madrid, Spain",
+      "lat": 40.4168,
+      "lng": -3.7038,
+      "sentTo": "",
+      "note": "",
+      "images": [
+        "public/participants/desiree-1.jpg",
+        "public/participants/desiree-2.jpg"
+      ]
+    },
+    {
+      "name": "Kizzy",
+      "place": "Trinidad and Tobago",
+      "lat": 10.6960051,
+      "lng": -61.8724708,
+      "sentTo": "Millbrook",
+      "note": "\"\"Postcrossing and snail mail had helped me through very dark times as well and given me renewed hope in the goodness of mankind.\"",
+      "images": [
+        "public/contributors/kizzy-1.jpg"
+      ]
+    },
+    {
+      "name": "Montreal Postcrossers",
+      "place": "Montreal (QC), Canada",
+      "lat": 45.5163327,
+      "lng": -73.6416302,
+      "sentTo": "",
+      "note": "",
+      "images": [
+        "public/contributors/montreal-postcrossers-1.jpg",
+        "public/contributors/montreal-postcrossers-2.jpg"
+      ]
+    },
+    {
+      "name": "Vivian",
+      "place": "Germany",
+      "lat": 50.1211377,
+      "lng": 8.4714174,
+      "sentTo": "",
+      "note": "",
+      "images": [
+        "public/contributors/vivian-1.jpg",
+        "public/contributors/vivian-2.jpg",
+        "public/contributors/vivian-3.jpg",
+        "public/contributors/vivian-4.jpg"
+      ]
+    }
+  ]
+}
