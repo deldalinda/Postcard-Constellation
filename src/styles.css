@@ -1,0 +1,716 @@
+:root {
+  --sky-0: #14133b;
+  --sky-1: #232265;
+  --sky-2: #2e2d7a;
+  --ink: #eceafb;
+  --ink-dim: #b9b6e4;
+  --gold: #e8c476;
+  --line: rgba(236, 234, 251, 0.35);
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans: "Jost", "Avenir Next", "Helvetica Neue", sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 30%, var(--sky-2) 0%, var(--sky-1) 45%, var(--sky-0) 100%);
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+/* Canvases are replaced elements: inset:0 alone does not stretch them, so
+   set explicit sizes — otherwise their on-screen size follows the pixel
+   buffer and layout math breaks on Retina screens. */
+#starfield {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#topbar {
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 30px 0;
+  pointer-events: none;
+}
+#topbar .brand { pointer-events: auto; }
+#topbar h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 30px;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 22px rgba(122, 116, 226, 0.7);
+}
+#topbar .tagline {
+  font-size: 12.5px;
+  font-weight: 300;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  margin-top: 4px;
+}
+
+#view-toggle {
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+  background: rgba(20, 19, 59, 0.55);
+  border: 1px solid rgba(236, 234, 251, 0.22);
+  border-radius: 999px;
+  padding: 5px;
+  backdrop-filter: blur(6px);
+}
+#view-toggle button {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  background: transparent;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+#view-toggle button.active {
+  color: var(--sky-0);
+  background: var(--ink);
+  box-shadow: 0 0 18px rgba(236, 234, 251, 0.4);
+}
+
+/* ---- display controls (bottom-left, globe view only) ---- */
+#display-controls {
+  position: fixed;
+  left: 30px;
+  bottom: 24px;
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 18px;
+  background: rgba(20, 19, 59, 0.55);
+  border: 1px solid rgba(236, 234, 251, 0.22);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+}
+body[data-view="globe"] #display-controls { display: flex; }
+
+#display-controls .switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  transition: color 0.2s ease;
+}
+#display-controls .switch:hover { color: var(--ink); }
+
+/* the track + knob */
+#display-controls .switch input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  width: 34px;
+  height: 18px;
+  border-radius: 999px;
+  background: rgba(236, 234, 251, 0.18);
+  border: 1px solid rgba(236, 234, 251, 0.3);
+  cursor: pointer;
+  transition: background 0.25s ease;
+  flex: none;
+}
+#display-controls .switch input::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.25s cubic-bezier(0.3, 0.8, 0.3, 1);
+}
+#display-controls .switch input:checked {
+  background: rgba(232, 196, 118, 0.55);
+  border-color: var(--gold);
+}
+#display-controls .switch input:checked::after {
+  transform: translateX(16px);
+  background: var(--gold);
+}
+#display-controls .switch input:checked + span { color: var(--ink); }
+
+/* ---- zoom control (left edge, globe view only) ---- */
+#zoom-control {
+  position: fixed;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 8px;
+  background: rgba(20, 19, 59, 0.55);
+  border: 1px solid rgba(236, 234, 251, 0.22);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+}
+body[data-view="globe"] #zoom-control { display: flex; }
+
+#zoom-control button {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(236, 234, 251, 0.35);
+  background: transparent;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+#zoom-control button:hover { background: rgba(236, 234, 251, 0.15); }
+
+#zoom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  writing-mode: vertical-lr;
+  direction: rtl; /* top of the track = zoomed in */
+  width: 6px;
+  height: 150px;
+  border-radius: 999px;
+  background: rgba(236, 234, 251, 0.22);
+  cursor: pointer;
+}
+#zoom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(232, 196, 118, 0.7);
+  cursor: pointer;
+}
+#zoom-range::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: none;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+}
+
+main { position: fixed; inset: 0; z-index: 5; }
+
+.view {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s;
+}
+.view.active { opacity: 1; visibility: visible; }
+
+#globe { position: absolute; inset: 0; }
+
+/* Names on the globe — HTML overlays with a padded hit area, centred on their
+   city by globe.gl. Two visually distinct kinds of label:
+     .pname — a PERSON: warm cream, serif, prominent.
+     .loc   — a PLACE: cool blue, sans-serif, small uppercase caption.
+   Clustered labels are raised to different altitudes (in 3D); a leader line
+   drawn on the overlay canvas ties each raised one back to its star. */
+.globe-label {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+  text-align: center;
+}
+/* Transparent DOM hit-target centred on a contributor's silver star (the star
+   itself is drawn on the burst canvas). Sits above the canvas so clicks aren't
+   swallowed by the arcs passing overhead. */
+.contrib-hit {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  pointer-events: auto;
+  /* Always sit above participant labels at the star's dot, so a co-located
+     contributor (e.g. in the Toronto cluster) is clickable. The label's lifted
+     name floats above the dot and stays clickable there. */
+  z-index: 9999 !important;
+}
+/* The text block; carries the click halo and the lift above the dot. */
+.globe-label .label-body {
+  display: inline-block;
+  padding: 8px 12px;
+  transform: translateY(-15px);
+  transition: transform 0.2s ease;
+}
+.globe-label .pname,
+.globe-label .loc {
+  display: block;
+  white-space: nowrap;
+  /* tight dark outline + glow so names read over bright city lights */
+  text-shadow:
+    0 0 3px rgba(0, 0, 0, 0.95), 0 0 3px rgba(0, 0, 0, 0.95),
+    0 1px 8px rgba(5, 4, 25, 0.95), 0 0 16px rgba(5, 4, 25, 0.8);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+/* Participant name — the person. Yellow (writer) stars: light yellow at rest,
+   darker gold on hover — the same at every zoom. Blue (Ukraine) stars use a
+   blue scheme instead (see .receiving below). */
+.globe-label .pname {
+  font-family: var(--serif);
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #f4e6a6;
+}
+/* Location caption — the place. Red so it reads on both the night and daylight
+   globe and stays distinct from the yellow & blue name plaques. */
+.globe-label .loc {
+  font-family: var(--sans);
+  font-size: 9.5px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ef9188;
+  /* far zoom shows names only; captions fade in as the camera approaches
+     (--cap-alpha is set per zoom level by globe-view.js) */
+  opacity: var(--cap-alpha, 1);
+  transition: opacity 0.35s ease;
+}
+.globe-label:hover .pname { transform: scale(1.08); }
+.globe-label:hover .pname { color: #dca94c; } /* darker gold on hover */
+.globe-label:hover .loc { color: #f8b3ac; } /* brighter red on hover */
+
+/* Blue (Ukraine) stars: a blue plaque scheme instead of yellow/white. */
+.globe-label.receiving .pname { color: #bcd9ff; }
+.globe-label.receiving:hover .pname { color: #7fa8e6; }
+
+/* Deep zoom (Black Marble tiles): the warm city lights sit right behind the
+   labels, so give each a dark rounded backing for separation. Name colour
+   stays consistent with the far view (no white swap). */
+#globe.tiles-active .globe-label .label-body {
+  background: rgba(6, 5, 20, 0.5);
+  border-radius: 9px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Raised (clustered) plaques are tied to their star by a true leader line
+   drawn per-frame on the burst overlay canvas (see globe-view.js) — not a
+   fixed CSS stem, which drifted off the star at oblique angles. */
+
+/* Independent toggles, driven by classes on #globe-view */
+#globe-view.hide-names .globe-label .pname { display: none; }
+#globe-view.hide-cities .globe-label .loc { display: none; }
+/* When a participant label has no visible text, stop it eating clicks */
+#globe-view.hide-names.hide-cities .globe-label { pointer-events: none !important; }
+#constellation { position: absolute; inset: 0; width: 100%; height: 100%; cursor: default; }
+
+.view-hint {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ---- side panel ---- */
+#panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: min(440px, 92vw);
+  z-index: 30;
+  background: linear-gradient(160deg, rgba(35, 34, 101, 0.92), rgba(20, 19, 59, 0.96));
+  border-left: 1px solid rgba(236, 234, 251, 0.25);
+  box-shadow: -30px 0 60px rgba(5, 4, 25, 0.6);
+  backdrop-filter: blur(14px);
+  transform: translateX(105%);
+  transition: transform 0.5s cubic-bezier(0.22, 0.8, 0.3, 1);
+  overflow-y: auto;
+  padding: 56px 30px 40px;
+}
+#panel.open { transform: translateX(0); }
+
+#panel-close {
+  position: absolute;
+  top: 14px; right: 18px;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--ink-dim);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+#panel-close:hover { color: var(--ink); }
+
+.p-name {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+.p-place {
+  margin-top: 2px;
+  font-size: 12.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.p-bio {
+  font-family: var(--serif);
+  font-size: 18.5px;
+  line-height: 1.55;
+  margin: 18px 0 22px;
+  color: var(--ink);
+}
+
+.p-journey {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  border-top: 1px solid rgba(236, 234, 251, 0.18);
+  border-bottom: 1px solid rgba(236, 234, 251, 0.18);
+  padding: 12px 0;
+  margin-bottom: 24px;
+}
+.p-journey .leg { color: var(--ink); }
+.p-journey .arrow { color: var(--gold); }
+
+.p-media video, .p-media audio {
+  width: 100%;
+  border-radius: 8px;
+  outline: none;
+  background: #000;
+}
+.p-media video { aspect-ratio: 16 / 9; object-fit: contain; }
+.p-video iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 8px;
+  background: #000;
+  display: block;
+}
+
+.p-section-title {
+  margin: 26px 0 12px;
+  font-size: 12px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.p-postcards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.p-postcards img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(236, 234, 251, 0.25);
+  cursor: zoom-in;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.p-postcards img:hover {
+  transform: scale(1.03) rotate(-0.5deg);
+  box-shadow: 0 8px 26px rgba(5, 4, 25, 0.65);
+}
+
+.p-actions { margin-top: 26px; }
+.p-actions button {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid rgba(236, 234, 251, 0.4);
+  border-radius: 999px;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.p-actions button:hover { background: rgba(236, 234, 251, 0.12); }
+
+/* ---- lightbox ---- */
+#lightbox[hidden] { display: none; }
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(8, 7, 30, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+#lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: 6px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
+}
+
+@media (max-width: 720px) {
+  #topbar { gap: 12px; }
+  #topbar h1 { font-size: 24px; }
+  #display-controls { left: 16px; bottom: 16px; padding: 12px 14px; gap: 9px; }
+}
+
+/* ---- postcard-back interview layout ---- */
+.p-postcard-back {
+  background: #f6f1e4; /* paper against the night sky */
+  color: #2b2a33;
+  border-radius: 6px;
+  padding: 14px 16px 12px;
+  margin: 10px 0 4px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+.pb-row { display: flex; gap: 12px; align-items: flex-start; }
+.pb-quote {
+  flex: 1;
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  line-height: 1.35;
+  font-style: italic;
+}
+.pb-corner { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.pb-stamp {
+  position: relative; /* anchors the face-zoom crop (see panel.js) */
+  width: 56px;
+  height: 68px;
+  border: 2px dashed #b3a373; /* perforation */
+  background: #fffdf6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 2px;
+  position: relative;
+  z-index: 1;
+}
+.pb-portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* bias the crop toward the upper part of the photo so faces stay whole */
+  object-position: 50% 22%;
+  cursor: zoom-in;
+}
+.pb-stamp-art { font-size: 1.6rem; color: #8b7c4f; }
+.pb-postmark {
+  width: 60px;
+  height: 60px;
+  border: 1.5px solid rgba(43, 42, 51, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5px;
+  font-family: var(--sans);
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(43, 42, 51, 0.6);
+  transform: rotate(-8deg);
+  /* the cancellation mark sits low-left of the stamp: only its upper-right
+     arc touches the stamp corner, leaving the town name fully readable */
+  margin-top: -14px;
+  margin-left: -56px;
+  position: relative;
+  z-index: 2;
+  pointer-events: none; /* clicks fall through to the stamp portrait */
+}
+.pb-context {
+  margin: 10px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: #4a4856;
+}
+.pb-read {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: #7a5c12;
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+.pb-read:hover { color: #a8811d; }
+
+/* ---- Starlights: the Defenders' collective gallery ---- */
+/* "Every card is a ray of sunshine in the kingdom of darkness." — the room
+   is darker than the night sky; each photo is a softly lit window that
+   kindles on first entry and brightens under the pointer. */
+#starlight-view {
+  background: radial-gradient(ellipse at 50% 20%, #0b0a24 0%, #060518 60%, #030310 100%);
+  overflow-y: auto;
+}
+#starlight {
+  max-width: 1180px;
+  margin: 0 auto;
+  /* clear the title + view toggle so the wall starts below them */
+  padding: 172px 28px 120px;
+}
+/* Justified-rows gallery: cells are absolutely positioned by starlight.js so
+   every row fills the width exactly, each photo keeping its own aspect ratio —
+   no empty gaps beside wide or featured cells. */
+.sl-wall {
+  position: relative;
+  width: 100%;
+}
+.sl-tile {
+  position: absolute;
+  overflow: hidden;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  /* only the kindle fades animate — never the layout geometry */
+  transition: opacity 1.1s ease, transform 1.1s ease;
+}
+.sl-tile.lit { opacity: 1; transform: none; }
+.sl-photo {
+  /* while a photo is still arriving, its cell reads as a faint glowing plate —
+     not a black hole that looks like a gap in the wall */
+  background: rgba(151, 176, 230, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(151, 176, 230, 0.08);
+}
+.sl-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* always show the whole photo — never crop */
+  cursor: zoom-in;
+  filter: brightness(0.72) saturate(0.9);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+.sl-photo::after { /* faint warm glow, brightening on hover */
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 26px rgba(232, 196, 118, 0.05);
+  pointer-events: none;
+  transition: box-shadow 0.4s ease;
+}
+.sl-photo:hover img { filter: brightness(1.05) saturate(1); transform: scale(1.04); }
+.sl-photo:hover::after { box-shadow: inset 0 0 40px rgba(232, 196, 118, 0.22); }
+/* date rides as an overlay, revealed on hover, so it never needs its own row */
+.sl-photo figcaption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 26px 10px 7px;
+  font-family: var(--sans);
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(230, 238, 255, 0.92);
+  text-align: right;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.62));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.sl-photo:hover figcaption { opacity: 1; }
+.sl-video-frame,
+.sl-video-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.sl-video-frame { background: #000; }
+.sl-quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  /* snug vertical padding (tied to the font) so the measured content-fit cell
+     has no wasted space top or bottom; horizontal tracks the cell width */
+  padding: calc(var(--quote-font, 22px) * 0.6) 6%;
+  border: 1px solid rgba(232, 196, 118, 0.18);
+  background: rgba(232, 196, 118, 0.03);
+  box-shadow: inset 0 0 44px rgba(232, 196, 118, 0.05);
+  transition: border-color 0.4s ease, opacity 1.1s ease, transform 1.1s ease;
+}
+.sl-quote:hover { border-color: rgba(232, 196, 118, 0.42); }
+.sl-quote blockquote {
+  margin: 0;
+  max-width: 94%;
+  font-family: var(--serif);
+  font-style: italic;
+  /* ONE uniform size for every quote — the cell width varies, the type doesn't */
+  font-size: var(--quote-font, 22px);
+  line-height: 1.38;
+  color: #f0e7c8;
+  overflow: hidden;
+}
+.sl-quote figcaption {
+  margin-top: 0.9em;
+  font-family: var(--sans);
+  font-size: calc(var(--quote-font, 22px) * 0.52);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(232, 196, 118, 0.7);
+}
+
+/* Lightbox caption (Starlights photos; empty for panel images) */
+#lightbox figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+#lightbox-cap {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--ink-dim);
+}
+#lightbox-cap:empty { display: none; }
+
+/* Starburst overlay for the globe's participant dots (drawn per frame by
+   globe-view.js; clicks pass through to the labels and dots beneath). */
+.globe-bursts {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
