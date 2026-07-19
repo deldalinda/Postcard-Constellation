@@ -34,6 +34,15 @@
     <label class="switch"><input type="checkbox" id="tg-day" /><span>Daylight globe</span></label>
   </div>
 
+  <!-- Small screens: the display toggles hide behind this draggable pebble -->
+  <button id="dc-fab" type="button" aria-label="Display options" title="Display options">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M3 6.5h14M3 13.5h14" />
+      <circle cx="8" cy="6.5" r="2.4" fill="#14133b" />
+      <circle cx="12.5" cy="13.5" r="2.4" fill="#14133b" />
+    </svg>
+  </button>
+
   <div id="zoom-control" aria-label="Zoom">
     <button id="zoom-in" aria-label="Zoom in">+</button>
     <input id="zoom-range" type="range" min="0" max="1000" value="650" aria-label="Zoom level" />
