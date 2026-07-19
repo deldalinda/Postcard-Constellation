@@ -217,7 +217,7 @@ if (mystCard && mystPill) {
   document.getElementById("mc-min").addEventListener("click", () => setCollapsed(true));
   mystPill.addEventListener("click", () => setCollapsed(false));
   const stored = sessionStorage.getItem("mystery-collapsed");
-  setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1080px)").matches);
+  setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1010px)").matches);
 }
 
 // Mystery-card fallback: mailto silently fails for visitors without a mail

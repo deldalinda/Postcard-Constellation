@@ -914,11 +914,19 @@ body[data-view="starlight"] #topbar {
 }
 #mystery-card #mc-copy.copied { color: #9fe8b0; border-bottom-color: transparent; }
 
+/* Mid widths: slim the mystery card so the centred hint clears it and an
+   iPad Pro (1032 CSS px) keeps the side-by-side layout. */
+@media (max-width: 1200px) {
+  #mystery-card { width: 300px; }
+}
+
 /* Narrow screens: the bottom-edge layers collide, so stack them into bands.
    Constellations: mystery card on top, hint below it, site-menu pill last.
    Trails: display toggles on top, hint below them, site-menu pill last.
-   Wide screens keep the side-by-side row. */
-@media (max-width: 1080px) {
+   Wide screens keep the side-by-side row. 1010px sits just under an iPad
+   Pro's 1032 CSS px, so tablets get the wide layout; keep this in sync with
+   the matchMedia in main.js. */
+@media (max-width: 1010px) {
   #mystery-card {
     bottom: 132px;
     max-width: calc(100vw - 52px);
@@ -929,7 +937,7 @@ body[data-view="starlight"] #topbar {
      against the remaining half-viewport and wraps its label */
   #display-controls { bottom: 132px; left: 50%; transform: translateX(-50%); width: max-content; }
   #mystery-pill { bottom: 132px; left: 50%; transform: translateX(-50%); width: max-content; }
-  #mystery-card { left: 50%; transform: translateX(-50%); }
+  #mystery-card { left: 50%; transform: translateX(-50%); width: 330px; }
   #site-menu { left: 50%; right: auto; transform: translateX(-50%); width: max-content; }
   .site-menu-card { left: 50%; right: auto; transform: translateX(-50%); }
 }
