@@ -196,6 +196,77 @@ if (GUESS_FORM_KEY && guessModal) {
   });
 }
 
+// Small screens: the display toggles live behind a draggable pebble (#dc-fab).
+// Tap toggles the panel; drag carries the pebble anywhere, and on release it
+// glides to the nearest side edge (the .settle transition animates the glide).
+const dcFab = document.getElementById("dc-fab");
+const dcPanel = document.getElementById("display-controls");
+if (dcFab && dcPanel) {
+  const narrowMQ = matchMedia("(max-width: 1010px)");
+  let sx = 0, sy = 0, ox = 0, oy = 0, moved = false, tracking = false;
+  const place = (x, y) => {
+    const r = dcFab.getBoundingClientRect();
+    dcFab.style.left = Math.min(Math.max(x, 10), innerWidth - r.width - 10) + "px";
+    dcFab.style.top = Math.min(Math.max(y, 84), innerHeight - r.height - 10) + "px";
+  };
+  const closePanel = () => dcPanel.classList.remove("dc-open");
+  const openPanel = () => {
+    // sit beside the pebble, flipping sides when there's no room
+    const r = dcFab.getBoundingClientRect();
+    dcPanel.style.bottom = "auto";
+    dcPanel.style.transform = "none";
+    dcPanel.classList.add("dc-open");
+    const pw = dcPanel.offsetWidth, ph = dcPanel.offsetHeight;
+    let x = r.right + 12, origin = "left";
+    if (x + pw > innerWidth - 8) { x = r.left - pw - 12; origin = "right"; }
+    if (x < 8) x = 8;
+    const y = Math.min(Math.max(r.top + r.height / 2 - ph / 2, 84), innerHeight - ph - 12);
+    dcPanel.style.left = x + "px";
+    dcPanel.style.top = y + "px";
+    dcPanel.style.transformOrigin = origin + " center";
+  };
+  dcFab.addEventListener("pointerdown", (e) => {
+    tracking = true; moved = false;
+    sx = e.clientX; sy = e.clientY;
+    const r = dcFab.getBoundingClientRect();
+    ox = r.left; oy = r.top;
+    dcFab.setPointerCapture?.(e.pointerId);
+    dcFab.classList.remove("settle");
+  });
+  dcFab.addEventListener("pointermove", (e) => {
+    if (!tracking) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if (!moved && Math.hypot(dx, dy) < 6) return;
+    moved = true;
+    dcFab.classList.add("dragging");
+    closePanel();
+    place(ox + dx, oy + dy);
+  });
+  dcFab.addEventListener("pointerup", () => {
+    if (!tracking) return;
+    tracking = false;
+    dcFab.classList.remove("dragging");
+    if (moved) {
+      dcFab.classList.add("settle");
+      const r = dcFab.getBoundingClientRect();
+      const snapX = r.left + r.width / 2 < innerWidth / 2 ? 16 : innerWidth - r.width - 16;
+      place(snapX, r.top);
+    } else if (dcPanel.classList.contains("dc-open")) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+  document.addEventListener("click", (e) => {
+    if (!narrowMQ.matches || !dcPanel.classList.contains("dc-open")) return;
+    if (!dcPanel.contains(e.target) && !dcFab.contains(e.target)) closePanel();
+  });
+  // returning to a wide screen restores the always-visible panel untouched
+  narrowMQ.addEventListener?.("change", (m) => {
+    if (!m.matches) { closePanel(); dcPanel.style.cssText = ""; }
+  });
+}
+
 // The site menu closes when the visitor clicks anywhere outside it.
 const siteMenu = document.getElementById("site-menu");
 if (siteMenu) {

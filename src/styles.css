@@ -497,6 +497,51 @@ main { position: fixed; inset: 0; z-index: 5; }
   #view-toggle { gap: 4px; padding: 4px; }
   #view-toggle button { font-size: 11px; letter-spacing: 0.07em; padding: 7px 12px; }
   #display-controls { left: 16px; bottom: 16px; padding: 12px 14px; gap: 9px; }
+  /* a phone doesn't need a hand-sized zoom rail */
+  #zoom-control { left: 12px; gap: 7px; padding: 9px 6px; }
+  #zoom-control button { width: 24px; height: 24px; font-size: 14px; }
+  #zoom-range { height: 90px; width: 5px; }
+}
+
+/* ---- display-toggles pebble (small screens only) ---- */
+#dc-fab { display: none; }
+@media (max-width: 1010px) {
+  body[data-view="globe"] #dc-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    left: 16px;
+    top: calc(100vh - 190px);
+    z-index: 21;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--gold);
+    background: rgba(20, 19, 59, 0.85);
+    border: 1px solid rgba(236, 234, 251, 0.3);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+    cursor: grab;
+    touch-action: none; /* the drag is ours, not the page's */
+  }
+  #dc-fab.dragging { cursor: grabbing; box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6); }
+  /* releasing a drag glides the pebble to the nearest edge */
+  #dc-fab.settle {
+    transition:
+      left 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      top 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  /* the panel itself stays hidden until summoned from the pebble */
+  body[data-view="globe"] #display-controls { display: none; }
+  body[data-view="globe"] #display-controls.dc-open {
+    display: flex;
+    animation: dc-pop 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+@keyframes dc-pop {
+  from { opacity: 0; transform: scale(0.88); }
+  to { opacity: 1; transform: none; }
 }
 
 /* ---- postcard-back interview layout ---- */
