@@ -267,6 +267,18 @@ if (dcFab && dcPanel) {
   });
 }
 
+// Every external link leaves the exhibition in a NEW tab, so the sky stays
+// open behind it. Runs in the capture phase and stamps the target just in
+// time — covers every current and future link (mailto and in-app links are
+// untouched, and links that already chose a target keep it).
+document.addEventListener("click", (e) => {
+  const a = e.target.closest?.("a[href]");
+  if (a && /^https?:/i.test(a.getAttribute("href") || "") && !a.target) {
+    a.target = "_blank";
+    a.rel = "noopener";
+  }
+}, true);
+
 // The site menu closes when the visitor clicks anywhere outside it.
 const siteMenu = document.getElementById("site-menu");
 if (siteMenu) {
