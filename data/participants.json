@@ -266,6 +266,8 @@
       "sentTo": "Millbrook",
       "circle": "Story",
       "bio": "Jessica sends postal-art postcards from California — a few dozen at a time. A newer supporter, she is among the makers whose colourful handmade cards travel from the U.S. to Ukraine’s Defenders.",
+      "pullQuote": "It is always surprising because one can feel forgotten and isolated in the chaos.",
+      "quoteContext": "Asked how a Defender might feel reading one of her cards, Jessica thought of the firefighters and pilots who travel to California from other states and nations when the huge wildfires come — every time a surprise, every time a relief. Her cards carry the same message: not forgotten, not isolated.",
       "portrait": "public/participants/jessica-portrait.jpg",
       "postcards": [
         "public/participants/jessica-1.jpg",
@@ -632,6 +634,8 @@
       "sentTo": "Western Ukraine",
       "circle": "Team",
       "bio": "Anne backs this project through her business, Queen of the Hounds. In the first weeks of the project's launch, she hassled friends, neighbours and strangers to write cards; when card 10,000 was posted to Ukraine within the first year, the milestone prize was a boxed card set donated by Anne. Her mailbox surprises continue — 55 Christmas cards for Defenders arrived before the 2026 campaign was even announced.",
+      "pullQuote": "Thank goodness I had Anne to help me.",
+      "quoteContext": "Peter's words, remembering the Australia branch's hectic first three weeks in March 2023, when he and Anne hassled friends, neighbours, relatives and strangers until the first envelope of 94 cards was on its way to Ukraine.",
       "postcards": [],
       "publicAttrs": {
         "foundVia": "Postcrossing"
