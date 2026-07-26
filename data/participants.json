@@ -45,6 +45,35 @@
       }
     },
     {
+      "id": "alyona",
+      "name": "Alyona",
+      "media": {
+        "type": "article",
+        "url": "https://postcardstothefrontcanada.com/2026/06/22/alyona-carries-on-irenas-legacy",
+        "title": "Alyona carries on Irena's legacy"
+      },
+      "city": "Kyiv",
+      "country": "Ukraine",
+      "lat": 50.4501,
+      "lng": 30.5234,
+      "circle": "Ukraine",
+      "bio": "Alyona lives her outwardly ordinary Kyiv life — work, friends, theatre, reading — under the constant arithmetic of sirens. When her friend Irena died, she took up her legacy: collecting stamps for the Bone Cancer Research Trust.",
+      "pullQuote": "This is a life lived in constant anticipation, in a constant state of readiness.",
+      "quoteContext": "Her friend Irena collected postage stamps for cancer research until her passing in summer 2025. Alyona carries the project forward — kindness continuing through war and grief alike.",
+      "postcards": [
+        "public/participants/alyona-1.jpg",
+        "public/participants/alyona-2.jpg"
+      ],
+      "publicAttrs": {
+        "hobbies": [
+          "stamp collecting",
+          "reading",
+          "theatre"
+        ],
+        "foundVia": "Postcrossing"
+      }
+    },
+    {
       "id": "antich",
       "name": "Antich",
       "media": {
@@ -220,6 +249,36 @@
         ],
         "foundVia": "Postcrossing",
         "ukraineTie": "taught in Ukraine's democracy-education project"
+      }
+    },
+    {
+      "id": "jessica",
+      "name": "Jessica",
+      "media": {
+        "type": "article",
+        "url": "https://postcardstothefrontcanada.com/wp-content/uploads/2025/05/pttf_newsletter_may-2025_vol-2-iss-10.pdf#page=9",
+        "title": "How to make someone feel NOT forgotten and NOT isolated"
+      },
+      "city": "California",
+      "country": "United States",
+      "lat": 35.3209491,
+      "lng": -119.1013877,
+      "sentTo": "Millbrook",
+      "circle": "Story",
+      "bio": "Jessica sends postal-art postcards from California — a few dozen at a time. A newer supporter, she is among the makers whose colourful handmade cards travel from the U.S. to Ukraine’s Defenders.",
+      "portrait": "public/participants/jessica-portrait.jpg",
+      "postcards": [
+        "public/participants/jessica-1.jpg",
+        "public/participants/jessica-2.jpg",
+        "public/participants/jessica-3.jpg",
+        "public/participants/jessica-4.jpg",
+        "public/participants/jessica-5.jpg"
+      ],
+      "publicAttrs": {
+        "hobbies": [
+          "art making"
+        ],
+        "foundVia": "Postcrossing"
       }
     },
     {
@@ -409,6 +468,40 @@
       }
     },
     {
+      "id": "polly",
+      "name": "Polly",
+      "media": {
+        "type": "article",
+        "url": "https://postcardstothefrontcanada.com/wp-content/uploads/2024/05/pttf_newsletter_04-2024_v05.pdf#page=9",
+        "title": "This is my reality"
+      },
+      "city": "Odesa",
+      "country": "Ukraine",
+      "lat": 46.4825,
+      "lng": 30.7233,
+      "circle": "Ukraine",
+      "bio": "Polly writes from Odesa at five in the morning, between air raids — sheltering underground with her mother, her cat Mura and dog Basya. Jan's Postcard Polina, painted an ocean away, was named in her honour.",
+      "pullQuote": "I wanted to take a photo in our realities and photograph it in the parking garage.",
+      "quoteContext": "She photographs the cards she receives \"in our realities\" — a parking-garage shelter at 5am. This is her reality; the cards are the love that reaches it.",
+      "portrait": "public/participants/polly-portrait.jpg",
+      "postcards": [
+        "public/participants/polly-1.jpg",
+        "public/participants/polly-2.jpg",
+        "public/participants/polly-3.jpg",
+        "public/participants/Polly_cat.jpg",
+        "public/participants/Polly_feeding_cats.jpg",
+        "public/participants/Polly_Nadya_Postcrossing.jpg",
+        "public/participants/polly-4.jpg"
+      ],
+      "publicAttrs": {
+        "pets": [
+          "cat",
+          "dog"
+        ],
+        "foundVia": "Postcrossing"
+      }
+    },
+    {
       "id": "renee",
       "name": "Renee",
       "media": {
@@ -497,6 +590,50 @@
         "pets": [
           "cat (Mr. Cat)"
         ],
+        "foundVia": "Postcrossing"
+      }
+    },
+    {
+      "id": "irena",
+      "name": "Irena",
+      "media": {
+        "type": "article",
+        "url": "https://postcardstothefrontcanada.com/wp-content/uploads/2025/01/pttf_newsletter_jan-2025_vol-2-iss-6.pdf#page=21",
+        "title": "Each postcard is a small piece of hope for a peaceful tomorrow"
+      },
+      "city": "Kyiv",
+      "country": "Ukraine",
+      "lat": 50.4501,
+      "lng": 30.5234,
+      "circle": "Ukraine",
+      "bio": "Irena collected used postage stamps in wartime Kyiv — first her own, then contributions from Postcrossers across the world — and turned them into funding for the Bone Cancer Research Trust, while herself living with cancer. She wrote cards to Defenders with her mom, and brought postcards to her oncology ward so other patients could write too. She passed away in June 2025; her friend Alyona now carries her Dobromarky (“Stamps for Good”) initiative forward.",
+      "pullQuote": "Each postcard is a small piece of hope for a peaceful tomorrow.",
+      "quoteContext": "The title of the letter Irena wrote to newsletter readers in January 2025 about collecting stamps for cancer research while living with cancer in wartime Kyiv. Her good deeds continue in her memory.",
+      "postcards": [],
+      "publicAttrs": {
+        "foundVia": "Postcrossing",
+        "hobbies": [
+          "stamp collecting"
+        ]
+      }
+    },
+    {
+      "id": "anne-au",
+      "name": "Anne",
+      "media": {
+        "type": "article",
+        "url": "https://postcardstothefrontcanada.com/wp-content/uploads/2024/03/pttf_newsletter_march-2024.pdf#page=5",
+        "title": "Reaching 10,000 cards in 12 Months"
+      },
+      "city": "Melbourne",
+      "country": "Australia",
+      "lat": -37.8676,
+      "lng": 144.8989,
+      "sentTo": "Western Ukraine",
+      "circle": "Team",
+      "bio": "Anne backs this project through her business, Queen of the Hounds. In the first weeks of the project's launch, she hassled friends, neighbours and strangers to write cards; when card 10,000 was posted to Ukraine within the first year, the milestone prize was a boxed card set donated by Anne. Her mailbox surprises continue — 55 Christmas cards for Defenders arrived before the 2026 campaign was even announced.",
+      "postcards": [],
+      "publicAttrs": {
         "foundVia": "Postcrossing"
       }
     }
