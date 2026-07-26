@@ -7,6 +7,9 @@
 const box = document.getElementById("lightbox");
 const img = document.getElementById("lightbox-img");
 const cap = document.getElementById("lightbox-cap");
+const btnClose = document.getElementById("lb-close");
+const btnPrev = document.getElementById("lb-prev");
+const btnNext = document.getElementById("lb-next");
 
 let items = []; // [{ src, cap, preview? }]
 let idx = 0;
@@ -27,8 +30,12 @@ function render() {
   }
   const parts = [];
   if (it.cap) parts.push(it.cap);
-  if (items.length > 1) parts.push(`${idx + 1} of ${items.length} · ← → to browse`);
+  if (items.length > 1) parts.push(`${idx + 1} of ${items.length}`);
   cap.textContent = parts.join(" · ");
+  // side arrows only make sense when there is somewhere to go
+  const single = items.length < 2;
+  btnPrev.hidden = single;
+  btnNext.hidden = single;
 }
 
 export function openLightbox(list, start = 0, closeCb = null) {
@@ -56,13 +63,17 @@ function step(d) {
   render();
 }
 
-// clicking the photo steps forward; clicking the backdrop closes
+// clicking the photo steps forward; clicking the backdrop closes;
+// the ✕ and the side arrows do what they look like they do
 img.addEventListener("click", (e) => {
   if (items.length > 1) {
     e.stopPropagation();
     step(1);
   }
 });
+btnPrev.addEventListener("click", (e) => { e.stopPropagation(); step(-1); });
+btnNext.addEventListener("click", (e) => { e.stopPropagation(); step(1); });
+btnClose.addEventListener("click", (e) => { e.stopPropagation(); closeLightbox(); });
 box.addEventListener("click", () => closeLightbox());
 
 window.addEventListener("keydown", (e) => {
