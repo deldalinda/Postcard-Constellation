@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ukrainian Phrases You Can Use — Postcards to the Front (Canada)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Special+Elite&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-day: #faf6ec; --bg-paper: #f4efe6; --ink-black: #1c1a17; --ink-light: #4c4842;
+    --airmail-red: #b02020; --airmail-blue: #0060b0; --kraft: #d4c5b0;
+    --ukraine-yellow: #ffd200; --plum: #57002b; --gold: #e8c476;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background-color: var(--bg-day);
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    font-family: "Jost", sans-serif; color: var(--ink-black); line-height: 1.6;
+  }
+  a { text-decoration: none; color: inherit; }
+  h1, h2 { font-family: "Cormorant Garamond", Georgia, serif; }
+  .handwriting { font-family: "Caveat", cursive; color: var(--airmail-blue); }
+  .eyebrow { font-weight: 500; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase;
+             color: var(--plum); margin-bottom: 12px; display: block; }
+  .airmail-border { height: 9px; background: repeating-linear-gradient(135deg,
+      var(--airmail-red) 0 20px, #fff 20px 40px, var(--airmail-blue) 40px 60px, #fff 60px 80px); }
+
+  header.hdr { display: flex; align-items: center; gap: 20px; height: 70px; padding: 0 clamp(18px, 5vw, 54px);
+      background: rgba(250,246,236,0.95); border-bottom: 1px solid rgba(49,49,49,0.09);
+      position: sticky; top: 0; z-index: 10; backdrop-filter: blur(6px); }
+  .logo-mark { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: clamp(17px, 3.4vw, 23px); }
+  .logo-mark span { display: block; margin-top: -3px; font-family: "Jost", sans-serif; font-size: 10.5px;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-light); }
+  .hdr .back { margin-left: auto; font-size: 13px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--plum); }
+
+  .intro { padding: clamp(38px, 6vw, 66px) clamp(18px, 5vw, 54px) 26px; max-width: 1320px; margin: 0 auto; }
+  .intro h1 { font-weight: 600; font-size: clamp(34px, 6vw, 54px); line-height: 1.05; margin-bottom: 14px; }
+  .intro p.lead { font-weight: 300; font-size: clamp(16px, 2.2vw, 19px); color: var(--ink-light); max-width: 720px; }
+  .voice-note { margin-top: 20px; padding: 14px 18px; border-radius: 12px; font-size: 15px;
+      font-weight: 300; background: #fff; border: 1px solid rgba(49,49,49,0.1); color: var(--ink-light);
+      max-width: 720px; display: none; }
+  .voice-note.show { display: block; }
+  .voice-note b { font-weight: 500; color: var(--ink-black); }
+
+  main { max-width: 1320px; margin: 0 auto; padding: 0 clamp(18px, 5vw, 54px) 70px; }
+  section.group { margin-top: 44px; }
+  section.group h2 { font-size: clamp(24px, 3.4vw, 32px); margin-bottom: 6px; }
+  section.group .sub { font-weight: 300; font-size: 15px; color: var(--ink-light); margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+
+  .card { background: #fff; border-radius: 16px; padding: 20px 22px 18px;
+      border: 1px solid rgba(49,49,49,0.09); box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+      display: flex; flex-direction: column; justify-content: space-between;
+      transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(60,40,5,0.09); }
+  .en { font-weight: 500; font-size: 14.5px; color: var(--plum); margin-bottom: 7px; }
+  .uk { font-family: "Cormorant Garamond", serif; font-size: clamp(21px, 3vw, 26px); font-weight: 600;
+      line-height: 1.22; margin-bottom: 3px; }
+  .pr { font-weight: 300; font-size: 14px; font-style: italic; color: var(--ink-light); margin-bottom: 16px; }
+  .row { display: flex; gap: 9px; align-items: center; flex-wrap: wrap; }
+  button { font-family: "Jost", sans-serif; cursor: pointer; }
+  .play { background: var(--gold); color: #0f0e2f; border: none; border-radius: 999px;
+      padding: 8px 15px; font-size: 12px; font-weight: 500; letter-spacing: 0.12em;
+      text-transform: uppercase; display: inline-flex; align-items: center; gap: 7px;
+      transition: background 0.2s ease; }
+  .play:hover { background: #dcb35a; }
+  .play[disabled] { opacity: 0.45; cursor: default; }
+  .play svg { width: 13px; height: 13px; fill: currentColor; }
+  .play.speaking { background: var(--airmail-blue); color: #fff; }
+  .copy { background: none; border: 1px solid rgba(49,49,49,0.22); color: var(--ink-light);
+      border-radius: 999px; padding: 8px 14px; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; transition: border-color 0.2s ease, color 0.2s ease; }
+  .copy:hover { border-color: var(--plum); color: var(--plum); }
+  .copy.done { border-color: #2f7d4f; color: #2f7d4f; }
+
+  footer { background: linear-gradient(180deg, #191849 0%, #14133b 60%, #100f31 100%);
+      color: #b7bde4; padding: 44px clamp(18px, 5vw, 54px); font-weight: 300; font-size: 14.5px; }
+  footer .wm { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 24px;
+      color: #f2efff; margin-bottom: 2px; }
+  footer .sub { font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase;
+      color: rgba(151,176,230,0.85); margin-bottom: 16px; }
+  footer a { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="airmail-border"></div>
+<header class="hdr">
+  <div class="logo-mark">Postcards to the Front<span>Canada &middot; Канада</span></div>
+  <a class="back" href="https://postcardstothefrontcanada.com">&larr; Back to the site</a>
+</header>
+
+<div class="intro">
+  <span class="eyebrow">Practical tools</span>
+  <h1>Ukrainian phrases you can use</h1>
+  <p class="lead">Brief English-to-Ukrainian translations you could write to Ukraine&rsquo;s Defenders.
+    Press <b>Listen</b> to hear a phrase before you copy it onto your card &mdash;
+    <span class="handwriting" style="font-size: 23px;">try one!</span></p>
+  <p class="voice-note" id="voice-note"></p>
+</div>
+
+<main id="phrases"></main>
+
+<footer>
+  <p class="wm">Postcards to the Front</p>
+  <p class="sub">Canada &middot; Канада</p>
+  <p>P.&thinsp;O. Box 184, Millbrook, Ontario, L0A 1G0 CANADA &middot;
+    <a href="mailto:PostcardsToTheFront.Canada@gmail.com">PostcardsToTheFront.Canada@gmail.com</a></p>
+  <p style="margin-top: 10px;"><a href="./">&#10022; Postcard Constellation &mdash; visit the exhibition</a></p>
+</footer>
+
+<script>
+// Phrases as published at postcardstothefrontcanada.com — grouped for browsing.
+const GROUPS = [
+  { title: "Openings", sub: "How to begin your card.", items: [
+    ["Dear defender of Ukraine!", "Шановний захиснику України!", "Shanovnyi zakhysnyku Ukrainy!", "a respectful tone"],
+    ["Dear defender of Ukraine,", "Любий захиснику України,", "Liubyi zakhysnyku Ukrainy,", "a warmer tone"],
+    ["Greetings!", "Вітаю!", "Vitaiu!"],
+    ["Greetings from Canada!", "Вітаю з Канади!", "Vitaiu z Kanady!"],
+    ["Hello!", "Привіт!", "Pryvit!"],
+    ["Hello from Canada!", "Привіт з Канади!", "Pryvit z Kanady!"],
+    ["Greetings from over the ocean!", "Вітання з-за океану!", "Vitannia z-za okeanu!"],
+  ]},
+  { title: "Praise & thanks", sub: "Telling them what their courage means.", items: [
+    ["You are heroes!", "Ви – герої!", "Vy – heroi!"],
+    ["Slava Ukraini! (Glory to Ukraine)", "Слава Україні!", "Slava Ukraini!"],
+    ["Thank you!", "Дякую!", "Diakuiu!"],
+    ["We are thankful.", "Ми вдячні.", "My vdiachni."],
+    ["We are proud of you!", "Ми пишаємося вами!", "My pyshaiemosia vamy!"],
+    ["We are proud of how strong you are and how you are defending your country.",
+     "Ми пишаємось, наскільки ви сильні і як захищаєте свою країну.",
+     "My pyshaiemos, naskilky vy sylni i yak zakhyshchaiete svoiu krainu."],
+    ["You are defending your motherland. You are brave and courageous.",
+     "Ви захищаєте свою батьківщину, ви мужні і хоробрі.",
+     "Vy zakhyshchaiete svoiu batkivshchynu, vy muzhni i khorobri."],
+    ["You defend your country and the democracy.", "Ви захищаєте свою країну і демократію.",
+     "Vy zakhyshchaiete svoiu krainu i demokratiiu."],
+    ["You are the heartbeat of Ukraine.", "Ти серцебиття України.", "Ty sertsebyttia Ukrainy."],
+    ["What you do is incredible.", "Те, що ви робите, неймовірно.", "Te, shcho vy robyte, neimovirno."],
+  ]},
+  { title: "We see you", sub: "Reminding them the world is watching and remembering.", items: [
+    ["The whole world sees what is going on.", "Увесь світ бачить, що відбувається.",
+     "Uves svit bachyt, shcho vidbuvaietsia."],
+    ["We read news about Ukraine every day.", "Ми читаємо новини про Україну щодня.",
+     "My chytaiemo novyny pro Ukrainu shchodnia."],
+    ["We read a lot about Ukraine.", "Ми багато читаємо про Україну.", "My bahato chytaiemo pro Ukrainu."],
+    ["We didn't forget about you.", "Ми не забуваємо про вас.", "My ne zabuvaiemo pro vas."],
+    ["We are together.", "Ми разом.", "My razom."],
+    ["Our country stays with Ukraine.", "Наша країна ЗА Україну.", "Nasha kraina ZA Ukrainu."],
+    ["Canada supports you.", "Канада підтримує Вас.", "Kanada pidtrymuie Vas."],
+    ["Canada stands with you.", "Канада ЗА вас.", "Kanada ZA vas."],
+    ["We send you our continuous support.", "Ми підтримуємо вас увесь цей час.",
+     "My pidtrymuiemo vas uves tsei chas."],
+  ]},
+  { title: "Courage & care", sub: "Wishes for their safety and for victory.", items: [
+    ["Please, be careful.", "Будь ласка, будьте обережні.", "Bud laska, budte oberezhni."],
+    ["Be strong and stay safe.", "Будьте сильними та бережіть себе.", "Budte sylnymy ta berezhit sebe."],
+    ["Don't give up!", "Не здавайтеся!", "Ne zdavaitesia!"],
+    ["Stay till the end!", "Стійте до кінця!", "Stiite do kintsia!", "to the end of the war"],
+    ["We wish you health and victory.", "Бажаємо вам здоров'я та перемоги.",
+     "Bazhaiemo vam zdorovia ta peremohy."],
+    ["I wish you a victory.", "Бажаю вам перемоги.", "Bazhaiu vam peremohy."],
+    ["War will end and you will always be heroes.", "Війна закінчиться, і ви завжди будете героями.",
+     "Viina zakinchytsia, i vy zavzhdy budete heroiamy."],
+    ["Bless Ukraine.", "Благослови Україну.", "Blahoslovy Ukrainu."],
+  ]},
+  { title: "A little warmth", sub: "Small human touches — they land more than you think.", items: [
+    ["I love borscht.", "Я люблю борщ.", "Ya liubliu borshch."],
+    ["I have never tried borscht.", "Я ніколи не їв борщ.", "Ya nikoly ne yiv borshch."],
+  ]},
+  { title: "Sign-offs", sub: "How to close your card.", items: [
+    ["With love,", "З любов'ю,", "Z liuboviu,"],
+    ["With care,", "З турботою,", "Z turbotoiu,"],
+    ["With respect,", "З повагою,", "Z povahoiu,"],
+    ["Hugs from Canada,", "Надсилаємо обійми з Канади,", "Nadsylaiemo obiimy z Kanady,"],
+    ["Friends forever,", "Друзі назавжди,", "Druzi nazavzhdy,"],
+  ]},
+];
+
+const PLAY_ICON = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+const canSpeak = "speechSynthesis" in window;
+let ukVoice = null;
+
+function pickVoice() {
+  if (!canSpeak) return;
+  const voices = speechSynthesis.getVoices();
+  ukVoice = voices.find((v) => /^uk(-|_|$)/i.test(v.lang)) || null;
+  const note = document.getElementById("voice-note");
+  if (!canSpeak) {
+    note.innerHTML = "<b>Audio isn't available in this browser.</b> The written phrases and " +
+      "pronunciations below still work — try Chrome, Edge or Safari for sound.";
+    note.classList.add("show");
+  } else if (!ukVoice && voices.length) {
+    // A non-Ukrainian voice reading Cyrillic is worse than no audio at all.
+    note.innerHTML = "<b>Your device has no Ukrainian voice installed,</b> so playback is switched " +
+      "off here — the pronunciation guide under each phrase will carry you. On a Mac you can add one " +
+      "in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices → Ukrainian.";
+    note.classList.add("show");
+    document.querySelectorAll(".play").forEach((b) => { b.disabled = true; b.title = "No Ukrainian voice installed"; });
+  }
+}
+
+function speak(text, btn) {
+  if (!canSpeak || !ukVoice) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.voice = ukVoice;
+  u.lang = ukVoice.lang;
+  u.rate = 0.85; // a touch slower, so it can be repeated aloud
+  document.querySelectorAll(".play.speaking").forEach((b) => b.classList.remove("speaking"));
+  btn.classList.add("speaking");
+  u.onend = u.onerror = () => btn.classList.remove("speaking");
+  speechSynthesis.speak(u);
+}
+
+function build() {
+  const main = document.getElementById("phrases");
+  for (const g of GROUPS) {
+    const sec = document.createElement("section");
+    sec.className = "group";
+    sec.innerHTML = `<h2>${g.title}</h2><p class="sub">${g.sub}</p><div class="grid"></div>`;
+    const grid = sec.querySelector(".grid");
+    for (const [en, uk, pr, hint] of g.items) {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        `<div><p class="en">${en}${hint ? ` <span style="font-weight:300;font-style:italic;opacity:.75">(${hint})</span>` : ""}</p>` +
+        `<p class="uk">${uk}</p><p class="pr">${pr}</p></div>` +
+        `<div class="row"><button class="play">${PLAY_ICON} Listen</button>` +
+        `<button class="copy">Copy</button></div>`;
+      card.querySelector(".play").addEventListener("click", (e) => speak(uk, e.currentTarget));
+      card.querySelector(".copy").addEventListener("click", async (e) => {
+        const b = e.currentTarget;
+        try {
+          await navigator.clipboard.writeText(uk);
+        } catch {
+          const ta = document.createElement("textarea");
+          ta.value = uk; document.body.appendChild(ta); ta.select();
+          document.execCommand("copy"); ta.remove();
+        }
+        b.textContent = "Copied ✓";
+        b.classList.add("done");
+        setTimeout(() => { b.textContent = "Copy"; b.classList.remove("done"); }, 1500);
+      });
+      grid.appendChild(card);
+    }
+    main.appendChild(sec);
+  }
+}
+
+build();
+pickVoice();
+// Chrome loads voices asynchronously — re-check once they arrive.
+if (canSpeak) speechSynthesis.onvoiceschanged = pickVoice;
+
+// External links open in a new tab, as everywhere else in this project.
+document.addEventListener("click", (e) => {
+  const a = e.target.closest?.("a[href]");
+  if (a && /^https?:/i.test(a.getAttribute("href") || "") && !a.target) {
+    a.target = "_blank"; a.rel = "noopener";
+  }
+}, true);
+</script>
+</body>
+</html>
