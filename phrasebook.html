@@ -183,34 +183,113 @@ const GROUPS = [
 const PLAY_ICON = '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
 const canSpeak = "speechSynthesis" in window;
 let ukVoice = null;
+let voicesSettled = false;   // have we actually finished looking for a voice?
+let nowPlaying = null;       // the one HTMLAudioElement allowed to play at a time
+
+// Recorded audio, keyed by the Ukrainian text. These play on ANY device with no
+// Ukrainian voice installed and no speech synthesis at all, so they are always
+// preferred. Uploaded to the WordPress media library (see
+// docs/homepage-design/to-upload/phrase-audio/README.md) — add more by dropping
+// files in there and adding a line here.
+const UPLOADS = "https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/07/";
+const RECORDED = {
+  "Вітаю з Канади!":                    UPLOADS + "pttf-01-greetings-from-canada.m4a",
+  "Ви – герої!":                        UPLOADS + "pttf-02-you-are-heroes.m4a",
+  "Ми пишаємося вами!":                 UPLOADS + "pttf-03-we-are-proud-of-you.m4a",
+  "Ми не забуваємо про вас.":           UPLOADS + "pttf-04-we-didnt-forget-you.m4a",
+  "Будьте сильними та бережіть себе.":  UPLOADS + "pttf-05-be-strong-stay-safe.m4a",
+  "Надсилаємо обійми з Канади,":        UPLOADS + "pttf-06-hugs-from-canada.m4a",
+};
+
+function clearPlayingState() {
+  document.querySelectorAll(".play.speaking").forEach((b) => b.classList.remove("speaking"));
+}
+
+function stopEverything() {
+  if (canSpeak) speechSynthesis.cancel();
+  if (nowPlaying) { nowPlaying.pause(); nowPlaying = null; }
+  clearPlayingState();
+}
+
+// Say something on the button itself. Silence with no explanation was the whole
+// bug: the old code returned early when no voice had loaded, leaving an enabled
+// button that did nothing at all when clicked.
+function flash(btn, msg) {
+  const original = btn.innerHTML;
+  btn.innerHTML = msg;
+  btn.classList.add("done");
+  setTimeout(() => { btn.innerHTML = original; btn.classList.remove("done"); }, 2600);
+}
 
 function pickVoice() {
   if (!canSpeak) return;
   const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;            // not loaded yet — settleVoices() will retry
   ukVoice = voices.find((v) => /^uk(-|_|$)/i.test(v.lang)) || null;
+  voicesSettled = true;
+  refreshButtons();
+}
+
+// getVoices() is async in Chrome and `onvoiceschanged` does not fire at all in
+// some Safari builds, so poll briefly instead of trusting either one, then
+// settle regardless so the UI never sits in an unknown state.
+function settleVoices() {
+  if (!canSpeak) { voicesSettled = true; refreshButtons(); return; }
+  let tries = 0;
+  const tick = () => {
+    pickVoice();
+    if (voicesSettled) return;
+    if (++tries > 12) { voicesSettled = true; refreshButtons(); return; }  // ~2.4s
+    setTimeout(tick, 200);
+  };
+  tick();
+}
+
+function refreshButtons() {
   const note = document.getElementById("voice-note");
+  // A phrase with a recording is always playable, whatever the device.
+  document.querySelectorAll(".play").forEach((b) => {
+    const playable = b.dataset.recorded === "1" || (canSpeak && ukVoice);
+    b.disabled = !playable;
+    b.title = playable ? "" :
+      (canSpeak ? "No Ukrainian voice installed on this device" : "This browser cannot speak text");
+  });
+  if (!voicesSettled) return;
+  const recorded = document.querySelectorAll('.play[data-recorded="1"]').length;
   if (!canSpeak) {
-    note.innerHTML = "<b>Audio isn't available in this browser.</b> The written phrases and " +
-      "pronunciations below still work — try Chrome, Edge or Safari for sound.";
+    note.innerHTML = "<b>This browser can't read text aloud,</b> so only the " + recorded +
+      " phrases with recordings will play. Every phrase still shows a pronunciation guide.";
     note.classList.add("show");
-  } else if (!ukVoice && voices.length) {
+  } else if (!ukVoice) {
     // A non-Ukrainian voice reading Cyrillic is worse than no audio at all.
-    note.innerHTML = "<b>Your device has no Ukrainian voice installed,</b> so playback is switched " +
-      "off here — the pronunciation guide under each phrase will carry you. On a Mac you can add one " +
-      "in System Settings → Accessibility → Spoken Content → System Voice → Manage Voices → Ukrainian.";
+    note.innerHTML = "<b>Your device has no Ukrainian voice installed,</b> so the " + recorded +
+      " phrases with recordings will play and the rest are switched off — the pronunciation guide " +
+      "under each phrase will carry you. On a Mac you can add a voice in System Settings → " +
+      "Accessibility → Spoken Content → System Voice → Manage Voices → Ukrainian.";
     note.classList.add("show");
-    document.querySelectorAll(".play").forEach((b) => { b.disabled = true; b.title = "No Ukrainian voice installed"; });
   }
 }
 
-function speak(text, btn) {
-  if (!canSpeak || !ukVoice) return;
-  speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
+// One entry point: a real recording if we have one, otherwise the device voice.
+function play(uk, btn) {
+  stopEverything();
+  const src = RECORDED[uk];
+  if (src) {
+    const audio = new Audio(src);
+    nowPlaying = audio;
+    btn.classList.add("speaking");
+    const done = () => { if (nowPlaying === audio) nowPlaying = null; btn.classList.remove("speaking"); };
+    audio.addEventListener("ended", done);
+    audio.addEventListener("error", () => { done(); flash(btn, "Audio didn’t load"); });
+    audio.play().catch(() => { done(); flash(btn, "Tap again to play"); });
+    return;
+  }
+  if (!canSpeak) { flash(btn, "No audio here"); return; }
+  if (!ukVoice) { flash(btn, "No Ukrainian voice"); return; }
+  const u = new SpeechSynthesisUtterance(uk);
   u.voice = ukVoice;
   u.lang = ukVoice.lang;
   u.rate = 0.85; // a touch slower, so it can be repeated aloud
-  document.querySelectorAll(".play.speaking").forEach((b) => b.classList.remove("speaking"));
   btn.classList.add("speaking");
   u.onend = u.onerror = () => btn.classList.remove("speaking");
   speechSynthesis.speak(u);
@@ -229,9 +308,10 @@ function build() {
       card.innerHTML =
         `<div><p class="en">${en}${hint ? ` <span style="font-weight:300;font-style:italic;opacity:.75">(${hint})</span>` : ""}</p>` +
         `<p class="uk">${uk}</p><p class="pr">${pr}</p></div>` +
-        `<div class="row"><button class="play">${PLAY_ICON} Listen</button>` +
+        `<div class="row"><button class="play"${RECORDED[uk] ? ' data-recorded="1"' : ""}>` +
+        `${PLAY_ICON} Listen</button>` +
         `<button class="copy">Copy</button></div>`;
-      card.querySelector(".play").addEventListener("click", (e) => speak(uk, e.currentTarget));
+      card.querySelector(".play").addEventListener("click", (e) => play(uk, e.currentTarget));
       card.querySelector(".copy").addEventListener("click", async (e) => {
         const b = e.currentTarget;
         try {
@@ -252,9 +332,11 @@ function build() {
 }
 
 build();
-pickVoice();
-// Chrome loads voices asynchronously — re-check once they arrive.
+settleVoices();
+// Chrome loads voices asynchronously — re-check if the event does fire.
 if (canSpeak) speechSynthesis.onvoiceschanged = pickVoice;
+// Stop whatever is playing when the tab is hidden.
+document.addEventListener("visibilitychange", () => { if (document.hidden) stopEverything(); });
 
 // External links open in a new tab, as everywhere else in this project.
 document.addEventListener("click", (e) => {
