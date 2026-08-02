@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>Ukrainian phrases you can use — preview of the Postcards to the Front page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+<style>
+  /* --- site chrome, matching postcardstothefrontcanada.com ---------- */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #faf6ec; color: #1c1a17; line-height: 1.6;
+    font-family: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 300; }
+  a { color: #7b6446; }
+  h1, h2, h3 { font-family: "Cormorant Garamond", "Iowan Old Style", Palatino, Georgia, serif;
+    font-weight: 600; }
+  .airmail-border { height: 9px; background: repeating-linear-gradient(135deg,
+      #b02020 0 20px, #fff 20px 40px, #0060b0 40px 60px, #fff 60px 80px); }
+  header.hdr { display: flex; align-items: center; gap: 20px; height: 70px;
+    padding: 0 clamp(18px, 5vw, 54px); background: rgba(250,246,236,0.95);
+    border-bottom: 1px solid rgba(49,49,49,0.09); position: sticky; top: 0; z-index: 10;
+    backdrop-filter: blur(6px); }
+  .logo-mark { font-family: "Cormorant Garamond", serif; font-weight: 600;
+    font-size: clamp(17px, 3.4vw, 23px); }
+  .logo-mark span { display: block; margin-top: -3px; font-family: "Jost", sans-serif;
+    font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #4c4842; }
+  .hdr .back { margin-left: auto; font-size: 13px; font-weight: 500; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #57002b; text-decoration: none; }
+  .preview-note { background: #fff6d6; border-bottom: 1px solid #e8d9a0;
+    padding: 10px clamp(18px, 5vw, 54px); font-size: 13.5px; color: #4c4842; }
+  .preview-note b { font-weight: 500; color: #1c1a17; }
+  footer { background: linear-gradient(180deg, #191849 0%, #14133b 60%, #100f31 100%);
+    color: #b7bde4; padding: 44px clamp(18px, 5vw, 54px); font-weight: 300; font-size: 14.5px; }
+  footer .wm { font-family: "Cormorant Garamond", serif; font-weight: 600; font-size: 24px;
+    color: #f2efff; margin-bottom: 2px; }
+  footer .sub { font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: rgba(151,176,230,0.85); margin-bottom: 16px; }
+  footer a { color: #e8c476; }
+
+  /* --- the page itself: copied verbatim from the site's Additional CSS,
+         so this preview renders exactly as WordPress page 7397 does ---- */
+/* --- Phrasebook page (7397): mirrors the exhibition phrasebook ----
+   Content is ONE alignfull group (.pttf-phrasebook, flow layout), so
+   no constrained-layout centring applies; this CSS owns all widths.
+   Every card ends with a dashed .pttf-ph-slot pill reserving the spot
+   for the English (female voice) recordings still to come. */
+.pttf-phrasebook { max-width: 1320px !important; margin: 0 auto !important; padding: 10px clamp(18px, 5vw, 54px) 70px; }
+.pttf-ph-eyebrow { letter-spacing: .3em; text-transform: uppercase; color: #57002b; font-weight: 600; font-size: .8rem; margin: 0 0 12px !important; }
+.pttf-ph-title { font-size: clamp(34px, 6vw, 54px); line-height: 1.05; margin: 0 0 14px !important; }
+.pttf-ph-lead { font-weight: 300; font-size: clamp(16px, 2.2vw, 19px); color: #4c4842; max-width: 720px; margin: 0 !important; }
+.pttf-ph-hand {
+	font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+	font-style: italic; color: #0060b0; font-size: 1.3em;
+}
+.pttf-ph-note {
+	margin: 18px 0 0 !important; padding: 12px 18px; border-radius: 12px;
+	background: #fff; border: 1px solid rgba(49, 49, 49, 0.1);
+	color: #4c4842; font-size: .92rem; font-weight: 300; max-width: 720px;
+}
+.pttf-ph-h { font-size: clamp(24px, 3.4vw, 32px); margin: 44px 0 4px !important; }
+.pttf-ph-sub { font-weight: 300; font-size: .95rem; color: #4c4842; margin: 0 0 20px !important; }
+.pttf-ph-grid {
+	display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 20px; margin: 0 !important;
+}
+.pttf-ph-grid > .pttf-ph-card { margin: 0 !important; }
+.pttf-ph-card {
+	background: #fff; border-radius: 16px; padding: 20px 22px 18px;
+	border: 1px solid rgba(49, 49, 49, 0.09); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+	display: flex; flex-direction: column;
+	transition: transform .2s ease, box-shadow .2s ease;
+}
+.pttf-ph-card:hover { transform: translateY(-3px); box-shadow: 0 14px 38px rgba(60, 40, 5, 0.09); }
+.pttf-ph-t { font-weight: 500; font-size: .92rem; color: #57002b; line-height: 1.4; margin: 0 0 14px !important; }
+.pttf-ph-t strong {
+	display: block; font-family: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+	font-size: clamp(21px, 3vw, 26px); font-weight: 600; line-height: 1.22;
+	color: #1c1a17; margin: 6px 0 2px;
+}
+.pttf-ph-t em { font-weight: 300; font-size: .88rem; color: #4c4842; }
+.pttf-ph-card .wp-block-audio { margin: auto 0 0 !important; }
+.pttf-ph-card .wp-block-audio::before {
+	/* literal em dash, NOT \2014 — a hex escape eats the space after it */
+	content: "Listen — Ukrainian"; display: block; font-size: .68rem;
+	letter-spacing: .14em; text-transform: uppercase; color: #57002b;
+	font-weight: 600; margin-bottom: 5px;
+}
+.pttf-ph-card .wp-block-audio audio { width: 100%; height: 36px; display: block; }
+.pttf-ph-slot {
+	display: block; border: 1px dashed rgba(49, 49, 49, 0.3); border-radius: 999px;
+	padding: 7px 14px; font-size: .68rem; letter-spacing: .12em; text-transform: uppercase;
+	color: #8a8378; margin: 10px 0 0 !important; text-align: center;
+}
+.pttf-ph-card > .pttf-ph-slot:nth-child(2) { margin-top: auto !important; }
+.pttf-ph-foot { margin: 54px 0 0 !important; font-size: .9rem; color: #4c4842; max-width: 720px; }
+</style>
+</head>
+<body>
+
+<div class="airmail-border"></div>
+<header class="hdr">
+  <div class="logo-mark">Postcards to the Front<span>Canada &middot; Канада</span></div>
+  <a class="back" href="https://postcardstothefrontcanada.com">&larr; Back to the site</a>
+</header>
+
+<p class="preview-note"><b>Preview.</b> This is how the “Ukrainian phrases you can use”
+page will look on postcardstothefrontcanada.com. The recordings are the real ones,
+played from the site’s media library.</p>
+
+<div class="wp-block-group pttf-phrasebook">
+<p class="pttf-ph-eyebrow">Practical tools</p>
+<h1 class="wp-block-heading pttf-ph-title">Ukrainian phrases you can use</h1>
+<p class="pttf-ph-lead">Brief English-to-Ukrainian translations you could write to Ukraine’s
+Defenders. Press play to hear a phrase — in a real human voice — before you copy it onto your
+card. <em class="pttf-ph-hand">Try one!</em></p>
+<p class="pttf-ph-note">Ukrainian recordings by a friend of the project. English versions are
+on their way — each card keeps a spot ready.</p>
+<h2 class="wp-block-heading pttf-ph-h">Openings</h2><p class="pttf-ph-sub">How to begin your card.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Dear defender of Ukraine! <em>(a respectful tone)</em><br><strong>Шановний захиснику України!</strong><br><em>Shanovnyi zakhysnyku Ukrainy!</em></p><p class="pttf-ph-slot">Ukrainian voice — coming soon</p><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Dear defender of Ukraine, <em>(a warmer tone)</em><br><strong>Любий захиснику України,</strong><br><em>Liubyi zakhysnyku Ukrainy,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-02-dear-defender-warm.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Greetings!<br><strong>Вітаю!</strong><br><em>Vitaiu!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-03-greetings.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Greetings from Canada!<br><strong>Вітаю з Канади!</strong><br><em>Vitaiu z Kanady!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-04-greetings-from-canada.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Hello!<br><strong>Привіт!</strong><br><em>Pryvit!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-05-hello.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Hello from Canada!<br><strong>Привіт з Канади!</strong><br><em>Pryvit z Kanady!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-06-hello-from-canada.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Greetings from over the ocean!<br><strong>Вітання з-за океану!</strong><br><em>Vitannia z-za okeanu!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-07-greetings-over-the-ocean.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div><h2 class="wp-block-heading pttf-ph-h">Praise &amp; thanks</h2><p class="pttf-ph-sub">Telling them what their courage means.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">You are heroes!<br><strong>Ви – герої!</strong><br><em>Vy – heroi!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-08-you-are-heroes.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Slava Ukraini! <em>(Glory to Ukraine)</em><br><strong>Слава Україні!</strong><br><em>Slava Ukraini!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-09-slava-ukraini.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Thank you!<br><strong>Дякую!</strong><br><em>Diakuiu!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-10-thank-you.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We are thankful.<br><strong>Ми вдячні.</strong><br><em>My vdiachni.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-11-we-are-thankful.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We are proud of you!<br><strong>Ми пишаємося вами!</strong><br><em>My pyshaiemosia vamy!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-12-we-are-proud-of-you.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We are proud of how strong you are and how you are defending your country.<br><strong>Ми пишаємось, наскільки ви сильні і як захищаєте свою країну.</strong><br><em>My pyshaiemos, naskilky vy sylni i yak zakhyshchaiete svoiu krainu.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-13-proud-how-strong.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">You are defending your motherland. You are brave and courageous.<br><strong>Ви захищаєте свою батьківщину, ви мужні і хоробрі.</strong><br><em>Vy zakhyshchaiete svoiu batkivshchynu, vy muzhni i khorobri.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-14-defending-motherland.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">You defend your country and the democracy.<br><strong>Ви захищаєте свою країну і демократію.</strong><br><em>Vy zakhyshchaiete svoiu krainu i demokratiiu.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-15-defend-democracy.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">You are the heartbeat of Ukraine.<br><strong>Ти серцебиття України.</strong><br><em>Ty sertsebyttia Ukrainy.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-16-heartbeat-of-ukraine.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">What you do is incredible.<br><strong>Те, що ви робите, неймовірно.</strong><br><em>Te, shcho vy robyte, neimovirno.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-17-what-you-do-is-incredible.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div><h2 class="wp-block-heading pttf-ph-h">We see you</h2><p class="pttf-ph-sub">Reminding them the world is watching and remembering.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">The whole world sees what is going on.<br><strong>Увесь світ бачить, що відбувається.</strong><br><em>Uves svit bachyt, shcho vidbuvaietsia.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-18-whole-world-sees.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We read news about Ukraine every day.<br><strong>Ми читаємо новини про Україну щодня.</strong><br><em>My chytaiemo novyny pro Ukrainu shchodnia.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-19-we-read-news-every-day.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We read a lot about Ukraine.<br><strong>Ми багато читаємо про Україну.</strong><br><em>My bahato chytaiemo pro Ukrainu.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-20-we-read-a-lot.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We didn't forget about you.<br><strong>Ми не забуваємо про вас.</strong><br><em>My ne zabuvaiemo pro vas.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-21-we-didnt-forget.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We are together.<br><strong>Ми разом.</strong><br><em>My razom.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-22-we-are-together.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Our country stays with Ukraine.<br><strong>Наша країна ЗА Україну.</strong><br><em>Nasha kraina ZA Ukrainu.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-23-our-country-stays.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Canada supports you.<br><strong>Канада підтримує Вас.</strong><br><em>Kanada pidtrymuie Vas.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-24-canada-supports-you.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Canada stands with you.<br><strong>Канада ЗА вас.</strong><br><em>Kanada ZA vas.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-25-canada-stands-with-you.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We send you our continuous support.<br><strong>Ми підтримуємо вас увесь цей час.</strong><br><em>My pidtrymuiemo vas uves tsei chas.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-26-continuous-support.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div><h2 class="wp-block-heading pttf-ph-h">Courage &amp; care</h2><p class="pttf-ph-sub">Wishes for their safety and for victory.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Please, be careful.<br><strong>Будь ласка, будьте обережні.</strong><br><em>Bud laska, budte oberezhni.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-27-please-be-careful.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Be strong and stay safe.<br><strong>Будьте сильними та бережіть себе.</strong><br><em>Budte sylnymy ta berezhit sebe.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-28-be-strong-stay-safe.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Don't give up!<br><strong>Не здавайтеся!</strong><br><em>Ne zdavaitesia!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-29-dont-give-up.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Stay till the end! <em>(to the end of the war)</em><br><strong>Стійте до кінця!</strong><br><em>Stiite do kintsia!</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-30-stay-till-the-end.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">We wish you health and victory.<br><strong>Бажаємо вам здоров'я та перемоги.</strong><br><em>Bazhaiemo vam zdorovia ta peremohy.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-31-health-and-victory.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">I wish you a victory.<br><strong>Бажаю вам перемоги.</strong><br><em>Bazhaiu vam peremohy.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-32-i-wish-you-victory.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">War will end and you will always be heroes.<br><strong>Війна закінчиться, і ви завжди будете героями.</strong><br><em>Viina zakinchytsia, i vy zavzhdy budete heroiamy.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-33-war-will-end-heroes.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Bless Ukraine.<br><strong>Благослови Україну.</strong><br><em>Blahoslovy Ukrainu.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-34-bless-ukraine.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div><h2 class="wp-block-heading pttf-ph-h">A little warmth</h2><p class="pttf-ph-sub">Small human touches — they land more than you think.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">I love borscht.<br><strong>Я люблю борщ.</strong><br><em>Ya liubliu borshch.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-35-i-love-borscht.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">I have never tried borscht.<br><strong>Я ніколи не їв борщ.</strong><br><em>Ya nikoly ne yiv borshch.</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-36-never-tried-borscht.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div><h2 class="wp-block-heading pttf-ph-h">Sign-offs</h2><p class="pttf-ph-sub">How to close your card.</p><div class="wp-block-group pttf-ph-grid"><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">With love,<br><strong>З любов'ю,</strong><br><em>Z liuboviu,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-37-with-love.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">With care,<br><strong>З турботою,</strong><br><em>Z turbotoiu,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-38-with-care.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">With respect,<br><strong>З повагою,</strong><br><em>Z povahoiu,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-39-with-respect.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Hugs from Canada,<br><strong>Надсилаємо обійми з Канади,</strong><br><em>Nadsylaiemo obiimy z Kanady,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-40-hugs-from-canada.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div><div class="wp-block-group pttf-ph-card"><p class="pttf-ph-t">Friends forever,<br><strong>Друзі назавжди,</strong><br><em>Druzi nazavzhdy,</em></p><figure class="wp-block-audio pttf-ph-ua"><audio controls preload="none" src="https://postcardstothefrontcanada.wordpress.com/wp-content/uploads/2026/08/pttf-phrase-41-friends-forever.mp3"></audio></figure><p class="pttf-ph-slot">English voice — coming soon</p></div></div>
+<p class="pttf-ph-foot">Don’t forget to check our <a
+href="https://postcardstothefrontcanada.com/2023/04/23/how-to-send-a-postcard-to-defenders-of-ukraine/">tips
+for writing your cards</a>. A phrase written by hand — even an imperfect one — always brings a smile.</p>
+</div>
+
+<footer>
+  <p class="wm">Postcards to the Front</p>
+  <p class="sub">Canada &middot; Канада</p>
+  <p>P.&thinsp;O. Box 184, Millbrook, Ontario, L0A 1G0 CANADA &middot;
+    <a href="mailto:PostcardsToTheFront.Canada@gmail.com">PostcardsToTheFront.Canada@gmail.com</a></p>
+  <p style="margin-top: 10px;"><a href="./">&#10022; Postcard Constellation &mdash; visit the exhibition</a></p>
+</footer>
+
+</body>
+</html>
