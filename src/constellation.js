@@ -484,11 +484,13 @@ export function initConstellation(canvas, data, onSelect) {
       ctx.globalAlpha = a;
       ctx.textAlign = "center";
       ctx.font = `500 ${12.5 * dpr}px "Jost", sans-serif`;
-      ctx.fillStyle = "rgba(151, 176, 230, 0.9)";
+      // A revealed figure (the answer to a past round) is named in gold, so it
+      // reads as the solution rather than as ordinary map furniture.
+      ctx.fillStyle = g.revealed ? "rgba(232, 196, 118, 0.95)" : "rgba(151, 176, 230, 0.9)";
       const nm = g.name.toUpperCase().split("").join(" ");
       ctx.fillText(nm, pr.sx, pr.sy - 4 * dpr);
       ctx.font = `italic 400 ${11 * dpr}px "Cormorant Garamond", Georgia, serif`;
-      ctx.fillStyle = "rgba(151, 176, 230, 0.65)";
+      ctx.fillStyle = g.revealed ? "rgba(232, 196, 118, 0.7)" : "rgba(151, 176, 230, 0.65)";
       // The caption fades on the far side of the sphere, most in the wide
       // (zoomed-out) view where a back caption would land across someone's name;
       // zoom in and the captions stay legible all the way round.

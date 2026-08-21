@@ -303,6 +303,22 @@ if (mystCard && mystPill) {
   setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1010px)").matches);
 }
 
+// Answer card collapse — same pebble behaviour as the mystery card, remembered
+// separately so closing one does not close the other.
+const ansCard = document.getElementById("answer-card");
+const ansPill = document.getElementById("answer-pill");
+if (ansCard && ansPill) {
+  const setCollapsed = (c) => {
+    ansCard.hidden = c;
+    ansPill.hidden = !c;
+    sessionStorage.setItem("answer-collapsed", c ? "1" : "0");
+  };
+  document.getElementById("ac-min").addEventListener("click", () => setCollapsed(true));
+  ansPill.addEventListener("click", () => setCollapsed(false));
+  const stored = sessionStorage.getItem("answer-collapsed");
+  setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1010px)").matches);
+}
+
 // Mystery-card fallback: mailto silently fails for visitors without a mail
 // app, so the address itself is a click-to-copy button.
 const mcCopy = document.getElementById("mc-copy");

@@ -1136,3 +1136,94 @@ body[data-view="starlight"] #topbar {
 .gm-error { color: #f2a7a7 !important; }
 #gm-done { text-align: center; padding: 10px 0 6px; }
 .gm-done-star { font-size: 34px; color: #e8c476; margin: 0 0 10px; }
+
+
+/* Round-one answer card. Sits opposite the mystery card (top-right vs
+   bottom-left) so the sky carries both at once: the solved thread, named in
+   gold, and the unsolved one still asking. */
+#answer-card {
+  position: absolute;
+  right: 26px;
+  top: 26px;
+  width: 300px;
+  padding: 18px 20px 20px;
+  background: rgba(20, 19, 59, 0.88);
+  border: 1px solid rgba(232, 196, 118, 0.42);
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+#ac-min {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  padding: 2px 6px;
+  color: rgba(183, 189, 228, 0.7);
+  cursor: pointer;
+}
+#ac-min:hover { color: #eceafb; }
+#answer-card .ac-eyebrow {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #e8c476;
+  margin: 0 0 6px;
+}
+#answer-card .ac-word {
+  font-family: var(--serif);
+  font-size: 34px;
+  line-height: 1.05;
+  color: #e8c476;
+  margin: 0 0 10px;
+}
+#answer-card .ac-body {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.55;
+  color: #b7bde4;
+  margin: 0;
+}
+#answer-card .ac-body strong { color: #eceafb; font-weight: 500; }
+#answer-pill {
+  position: absolute;
+  right: 26px;
+  top: 26px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: clamp(9.5px, 2.8vw, 12px);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #e8c476;
+  background: rgba(20, 19, 59, 0.88);
+  border: 1px solid rgba(232, 196, 118, 0.42);
+  border-radius: 999px;
+  padding: 11px 19px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+#answer-pill:hover { border-color: rgba(232, 196, 118, 0.75); }
+/* display:flex above beats the UA [hidden] rule, so restate it explicitly. */
+#answer-pill[hidden] { display: none; }
+
+/* Release gate. In the "revelation" window (21 Aug -> next newsletter) the sky
+   carries only round one's answer, so the mystery card must not ask about a
+   figure that is not drawn. tools/release.py sets the attribute. */
+[data-release="revelation"] #mystery-card,
+[data-release="revelation"] #mystery-pill { display: none !important; }
+
+/* Narrow screens: the topbar owns the top-left, so drop the card below it. */
+@media (max-width: 1010px) {
+  #answer-card, #answer-pill { top: auto; bottom: 26px; right: 26px; }
+  #answer-card { width: min(300px, calc(100vw - 52px)); }
+}
