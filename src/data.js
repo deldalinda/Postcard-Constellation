@@ -4,7 +4,7 @@
 // participant's full journey to home base in western Ukraine, and the
 // constellation figures linking people who share something in common.
 
-import { GEO, cityKey } from "./geo.js";
+import { GEO, HUB_ONWARD, cityKey } from "./geo.js";
 import { buildConstellations } from "./grouping.js";
 
 // --- journeys ---------------------------------------------------------------
@@ -13,8 +13,11 @@ import { buildConstellations } from "./grouping.js";
 // built from the participants themselves (plus geo.js hub fallbacks), so a
 // new city added in the spreadsheet needs no code change.
 function buildJourneys(participants, coords) {
-  // hubOnward[hubCityKey] = where a participant located AT that hub sends to.
-  const hubOnward = {};
+  // hubOnward[hubCityKey] = where cards gathered at that hub travel next.
+  // Seeded from the project's fixed logistics first (see HUB_ONWARD), then
+  // from the roster — so a trunk leg survives even when nobody living at that
+  // hub is in the current exhibition.
+  const hubOnward = { ...HUB_ONWARD };
   for (const p of participants) {
     if (p.sentToKey && coords[p.cityKey]) hubOnward[p.cityKey] = p.sentToKey;
   }
@@ -77,6 +80,29 @@ export async function loadData() {
       toUkraine: dest.country === "Ukraine",
     });
   }
+  // Trunk legs (hub → onward) that no participant's own first leg already
+  // draws. A participant living AT a hub supplies its trunk arc for free, so
+  // this only fires when nobody in the current exhibition lives there — as with
+  // Melbourne once Peter is off the roster. The cards still make that journey,
+  // so the arc should still be on the globe.
+  const arcKeys = new Set(arcs.map((a) => `${a.fromKey}>${a.toKey}`));
+  for (const p of participants) {
+    for (const leg of (p.journey || []).slice(1)) {
+      const k = `${leg.from}>${leg.to}`;
+      if (arcKeys.has(k)) continue;
+      const from = coords[leg.from], to = coords[leg.to];
+      if (!from || !to) continue;
+      arcKeys.add(k);
+      arcs.push({
+        trunk: true,
+        startLat: from.lat, startLng: from.lng,
+        endLat: to.lat, endLng: to.lng,
+        fromKey: leg.from, toKey: leg.to,
+        toUkraine: to.country === "Ukraine",
+      });
+    }
+  }
+
   // Contributor arcs (white): only for contributors whose `sentTo` is filled.
   for (const c of contributors) {
     const toKey = cityKey(c.sentTo || "");

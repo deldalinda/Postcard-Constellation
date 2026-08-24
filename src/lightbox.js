@@ -15,11 +15,32 @@ let items = []; // [{ src, cap, preview? }]
 let idx = 0;
 let onClose = null;
 
+// Scale the photo to fill the frame, growing small originals as well as
+// shrinking large ones — max-width/max-height alone only ever shrink, so a
+// modest photo used to sit at its native size in the middle of a big screen.
+// Aspect is preserved, and the element keeps hugging the picture so its
+// rounded corners and shadow stay on the image rather than on empty space.
+const MAX_UPSCALE = 2.5; // past this a low-resolution original just goes soft
+function fitImage() {
+  const nw = img.naturalWidth, nh = img.naturalHeight;
+  if (!nw || !nh) return;
+  const scale = Math.min(
+    (window.innerWidth * 0.92) / nw,
+    (window.innerHeight * 0.84) / nh,
+    MAX_UPSCALE,
+  );
+  img.style.width = Math.round(nw * scale) + "px";
+  img.style.height = Math.round(nh * scale) + "px";
+}
+
 function render() {
   const it = items[idx];
   // Progressive: show the small preview instantly, then swap in the
   // full-size original once it has finished loading (guarded so a fast
   // ←/→ browse can't paint a stale image over the current one).
+  // Refit on every bitmap swap: the preview and the full original can differ
+  // in pixel size, so the frame is recomputed when each one lands.
+  img.onload = fitImage;
   if (it.preview && it.preview !== it.src) {
     img.src = it.preview;
     const full = new Image();
@@ -28,6 +49,7 @@ function render() {
   } else {
     img.src = it.src;
   }
+  if (img.complete) fitImage();
   const parts = [];
   if (it.cap) parts.push(it.cap);
   if (items.length > 1) parts.push(`${idx + 1} of ${items.length}`);
@@ -37,6 +59,8 @@ function render() {
   btnPrev.hidden = single;
   btnNext.hidden = single;
 }
+
+window.addEventListener("resize", () => { if (!box.hidden) fitImage(); });
 
 export function openLightbox(list, start = 0, closeCb = null) {
   items = Array.isArray(list) ? list : [list];

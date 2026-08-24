@@ -67,6 +67,16 @@ export const GEO = {
 
 // Normalize a raw city string to a GEO key: drop "(Province)" and anything after
 // a comma. "Millbrook (ON)" → "Millbrook"; "Hobart, Tasmania" → "Hobart".
+// The onward legs the project's logistics guarantee: cards gathered at a hub
+// travel on to Ukraine whether or not the person who couriers them happens to
+// be exhibited this month. Seeded before the roster in data.js, so dropping
+// (say) Peter from an exhibition no longer silently deletes the whole blue
+// Melbourne-to-Ukraine trunk. Keys are cityKey-normalized.
+export const HUB_ONWARD = {
+  Millbrook: "Western Ukraine",
+  Melbourne: "Western Ukraine",
+};
+
 export function cityKey(raw) {
   if (!raw) return "";
   return raw.replace(/\s*\([^)]*\)/g, "").split(",")[0].trim();

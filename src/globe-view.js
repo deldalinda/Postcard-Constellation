@@ -96,10 +96,16 @@ export function initGlobe(container, data, onSelect) {
     });
   }
 
-  // Hub dots (Millbrook, Melbourne, Western Ukraine) — no labels.
+  // Hubs (Millbrook, Melbourne, Western Ukraine) — the gathering points cards
+  // pass through, not people. They are drawn on the overlay as a six-pointed
+  // star so a waypoint can never be mistaken for a writer: people are round
+  // glowing discs, places are a geometric mark. The entry below stays in the
+  // points layer for ordering only — radius 0 renders nothing — and hubs
+  // remain non-interactive (see onPointClick / onPointHover).
   const waypointPoints = hubs.map((h) => ({
-    id: h.id, lat: h.lat, lng: h.lng, size: 0.08,
+    id: h.id, lat: h.lat, lng: h.lng, size: 0,
     color: h.country === "Ukraine" ? "#96c8ff" : "#ffffff", isWaypoint: true,
+    rgb: h.country === "Ukraine" ? "150, 200, 255" : "236, 234, 251",
   }));
   // Postcard-only contributors: anonymous silver stars. Clicking one opens
   // their actual written cards in the lightbox.
@@ -238,7 +244,13 @@ export function initGlobe(container, data, onSelect) {
     if (!c.images?.length) return;
     spinLocked = true; pauseSpin(); // freeze the globe behind the shadowbox
     openLightbox(
-      c.images.map((src) => ({ src, cap: `${c.name} — ${c.place}`, preview: thumb(src) })),
+      c.images.map((src, i) => {
+        // imageCaptions runs parallel to images; a blank entry just falls back
+        // to the contributor's own line.
+        const own = (c.imageCaptions || [])[i];
+        const base = `${c.name} — ${c.place}`;
+        return { src, cap: own ? `${base} · ${own}` : base, preview: thumb(src) };
+      }),
       0,
       () => { spinLocked = false; resumeSpinIfIdle(); }
     );
@@ -292,9 +304,62 @@ export function initGlobe(container, data, onSelect) {
       bctx.lineTo(ex, ey);
       bctx.stroke();
     }
+    const coreR = size * 0.5;
     bctx.fillStyle = `rgba(${rgb}, ${alpha})`;
     bctx.beginPath();
-    bctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
+    bctx.arc(x, y, coreR, 0, Math.PI * 2);
+    bctx.fill();
+
+    // Outline only — no darkening of the ground. Over the globe's city-lights
+    // texture a star of the same warm colour has no edge, so give it one: a
+    // ring of night drawn just OUTSIDE the core (not straddling it, which
+    // would eat into the disc and dim the star), then a fine bright ring
+    // outside that. Dark-then-light reads against a lit city and against
+    // empty ocean alike, and the core keeps its full brightness either way.
+    const ring = Math.max(1.2 * devicePixelRatio, size * 0.14);
+    bctx.strokeStyle = `rgba(5, 4, 22, ${0.85 * alpha})`;
+    bctx.lineWidth = ring;
+    bctx.beginPath();
+    bctx.arc(x, y, coreR + ring * 0.5, 0, Math.PI * 2);
+    bctx.stroke();
+
+    bctx.strokeStyle = `rgba(${rgb}, ${0.9 * alpha})`;
+    bctx.lineWidth = Math.max(1 * devicePixelRatio, size * 0.055);
+    bctx.beginPath();
+    bctx.arc(x, y, coreR + ring, 0, Math.PI * 2);
+    bctx.stroke();
+  }
+
+  // A hub's mark: a six-pointed star, held steady — it never twinkles, because
+  // it is a place and not a person. Same dark-then-light edge as the stars, so
+  // it reads over city lights without darkening the globe.
+  function starPath(x, y, r) {
+    const inner = r * 0.42;
+    bctx.beginPath();
+    for (let k = 0; k < 12; k++) {
+      const rad = k % 2 ? inner : r;
+      const ang = (Math.PI / 6) * k - Math.PI / 2;
+      const px = x + Math.cos(ang) * rad;
+      const py = y + Math.sin(ang) * rad;
+      k ? bctx.lineTo(px, py) : bctx.moveTo(px, py);
+    }
+    bctx.closePath();
+  }
+
+  function drawWaypoint(x, y, r, rgb, alpha) {
+    const hg = bctx.createRadialGradient(x, y, 0, x, y, r * 2.1);
+    hg.addColorStop(0, `rgba(${rgb}, ${0.2 * alpha})`);
+    hg.addColorStop(1, `rgba(${rgb}, 0)`);
+    bctx.fillStyle = hg;
+    bctx.beginPath();
+    bctx.arc(x, y, r * 2.1, 0, Math.PI * 2);
+    bctx.fill();
+
+    starPath(x, y, r);
+    bctx.strokeStyle = `rgba(5, 4, 22, ${0.85 * alpha})`;
+    bctx.lineWidth = Math.max(1.6 * devicePixelRatio, r * 0.22);
+    bctx.stroke();
+    bctx.fillStyle = `rgba(${rgb}, ${0.92 * alpha})`;
     bctx.fill();
   }
 
@@ -402,6 +467,18 @@ export function initGlobe(container, data, onSelect) {
         limb, tw
       );
     }
+    // hub waypoints — places, drawn as steady six-pointed stars
+    for (const w of waypointPoints) {
+      const pos = globe.getCoords(w.lat, w.lng, 0.001);
+      const dot = pos.x * cam.x + pos.y * cam.y + pos.z * cam.z;
+      if (dot <= R2) continue;
+      const limb = Math.min(1, (dot / R2 - 1) * 6);
+      const sc = globe.getScreenCoords(w.lat, w.lng, 0.001);
+      if (sc.x * dpr < -M || sc.x * dpr > burstCanvas.width + M ||
+          sc.y * dpr < -M || sc.y * dpr > burstCanvas.height + M) continue;
+      drawWaypoint(sc.x * dpr, sc.y * dpr, 9.5 * zoomScale * dpr, w.rgb, limb * 0.9);
+    }
+
     // silver stars: the postcard-only contributors, smaller and quieter
     for (const cp of contributorPoints) {
       const pos = globe.getCoords(cp.lat, cp.lng, 0.001);

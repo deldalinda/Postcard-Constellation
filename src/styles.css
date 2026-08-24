@@ -496,8 +496,10 @@ main { position: fixed; inset: 0; z-index: 5; }
   cursor: zoom-out;
 }
 #lightbox img {
-  max-width: 90vw;
-  max-height: 88vh;
+  /* Sized by fitImage() in lightbox.js, which scales the photo UP as well as
+     down. These remain as the ceiling and as the pre-load fallback. */
+  max-width: 92vw;
+  max-height: 84vh;
   border-radius: 6px;
   box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8);
 }
@@ -812,6 +814,13 @@ body[data-view="starlight"] #topbar {
   font-size: 13px;
   letter-spacing: 0.06em;
   color: var(--ink-dim);
+  /* A caption can carry a sentence or two, so hold it to a readable measure
+     and let it wrap. Without a max-width it stretched the full width of the
+     screen as a single line. */
+  max-width: min(90vw, 68ch);
+  text-align: center;
+  line-height: 1.55;
+  text-wrap: pretty;
 }
 #lightbox-cap:empty { display: none; }
 
@@ -1221,6 +1230,9 @@ body[data-view="starlight"] #topbar {
    figure that is not drawn. tools/release.py sets the attribute. */
 [data-release="revelation"] #mystery-card,
 [data-release="revelation"] #mystery-pill { display: none !important; }
+/* In exhibition 2 round one is old news — the answer lives in the newsletter. */
+[data-release="round2"] #answer-card,
+[data-release="round2"] #answer-pill { display: none !important; }
 
 /* Narrow screens: the topbar owns the top-left, so drop the card below it. */
 @media (max-width: 1010px) {
