@@ -1,63 +1,261 @@
 {
   "contributors": [
     {
-      "name": "Angela",
-      "place": "Denmark",
-      "lat": 55.6740774,
-      "lng": 12.4694478,
-      "sentTo": "",
-      "note": "",
-      "images": [
-        "public/contributors/angela-denmark.jpg"
-      ]
-    },
-    {
-      "name": "Desiree",
-      "place": "Madrid, Spain",
-      "lat": 40.4168,
-      "lng": -3.7038,
-      "sentTo": "",
-      "note": "",
-      "images": [
-        "public/participants/desiree-1.jpg",
-        "public/participants/desiree-2.jpg"
-      ]
-    },
-    {
-      "name": "Kizzy",
-      "place": "Trinidad and Tobago",
-      "lat": 10.6960051,
-      "lng": -61.8724708,
-      "sentTo": "Millbrook",
-      "note": "\"\"Postcrossing and snail mail had helped me through very dark times as well and given me renewed hope in the goodness of mankind.\"",
-      "images": [
-        "public/contributors/kizzy-1.jpg"
-      ]
-    },
-    {
-      "name": "Montreal Postcrossers",
+      "name": "Aanya and Caleb",
       "place": "Montreal (QC), Canada",
-      "lat": 45.5163327,
-      "lng": -73.6416302,
+      "lat": 45.4673217,
+      "lng": -73.6686957,
       "sentTo": "",
-      "note": "",
+      "note": "siblings drawing colourful batch of art cards",
       "images": [
-        "public/contributors/montreal-postcrossers-1.jpg",
-        "public/contributors/montreal-postcrossers-2.jpg"
+        "public/contributors/aanya-and-caleb-1.jpg",
+        "public/contributors/aanya-and-caleb-2.jpg",
+        "public/contributors/aanya-and-caleb-3.jpg",
+        "public/contributors/aanya-and-caleb-4.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        ""
       ]
     },
     {
-      "name": "Vivian",
-      "place": "Germany",
-      "lat": 50.1211377,
-      "lng": 8.4714174,
+      "name": "Australian primary school students",
+      "place": "Australia",
+      "lat": -37.9707187,
+      "lng": 144.3924201,
       "sentTo": "",
-      "note": "",
+      "note": "Australian students have delivered messages of solidarity and hope to orphan children and Defenders alike",
       "images": [
-        "public/contributors/vivian-1.jpg",
-        "public/contributors/vivian-2.jpg",
-        "public/contributors/vivian-3.jpg",
-        "public/contributors/vivian-4.jpg"
+        "public/contributors/australian-primary-school-1.jpg",
+        "public/contributors/australian-primary-school-2.jpg",
+        "public/contributors/australian-primary-school-3.jpg",
+        "public/contributors/australian-primary-school-4.jpg",
+        "public/contributors/australian-primary-school-5.jpg",
+        "public/contributors/australian-primary-school-6.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "James Ardiel Elementary School",
+      "place": "Surrey (BC), Canada",
+      "lat": 49.20661,
+      "lng": -122.8436962,
+      "sentTo": "",
+      "note": "Gr. 1 teacher, Iryna Zahara, and the school principle mobilized the whole school to make / write cards for Ukraine's Defenders.",
+      "images": [
+        "public/contributors/james-ardiel-elementary-school-1.jpg",
+        "public/contributors/james-ardiel-elementary-school-2.jpg",
+        "public/contributors/james-ardiel-elementary-school-3.jpg",
+        "public/contributors/james-ardiel-elementary-school-4.jpg",
+        "public/contributors/james-ardiel-elementary-school-5.jpg",
+        "public/contributors/james-ardiel-elementary-school-6.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "Millbrook South Cavan Public School",
+      "place": "Millbrook (ON), Canada",
+      "lat": 44.16,
+      "lng": -78.43,
+      "sentTo": "",
+      "note": "Grade 5 messages for Defenders and troops",
+      "images": [
+        "public/contributors/millbrook-south-cavan-public-school-1.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-2.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-3.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-4.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-5.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-6.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-7.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-8.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-9.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-10.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-11.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-12.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-13.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-14.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-15.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-16.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-17.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-18.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-19.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-20.jpg",
+        "public/contributors/millbrook-south-cavan-public-school-21.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "Odum Zustrich",
+      "place": "Clarington (ON), Canada",
+      "lat": 43.9823509,
+      "lng": -78.9847196,
+      "sentTo": "",
+      "note": "ODUM, the Ukrainian Democratic Youth Association, runs heritage-school classes, youth camps and cultural programmes for Ukrainian-Canadian young people. Its Oshawa branch organized a postcard-writing session with visitors from Canada and the United States.",
+      "images": [
+        "public/contributors/odum-zustrich-1.jpg",
+        "public/contributors/odum-zustrich-2.jpg",
+        "public/contributors/odum-zustrich-3.jpg",
+        "public/contributors/odum-zustrich-4.jpg",
+        "public/contributors/odum-zustrich-5.jpg",
+        "public/contributors/odum-zustrich-6.jpg",
+        "public/contributors/odum-zustrich-7.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "Polish Academy of Canada",
+      "place": "Oshawa (ON), Canada",
+      "lat": 43.9402034,
+      "lng": -78.8475245,
+      "sentTo": "",
+      "note": "Polish high school students visiting Canada for an intensive leadership training program",
+      "images": [
+        "public/contributors/polish-academy-of-canada-1.jpg",
+        "public/contributors/polish-academy-of-canada-15.jpg",
+        "public/contributors/polish-academy-of-canada-27.jpg",
+        "public/contributors/polish-academy-of-canada-32.jpg",
+        "public/contributors/polish-academy-of-canada-34.jpg",
+        "public/contributors/polish-academy-of-canada-44.jpg",
+        "public/contributors/polish-academy-of-canada-49.jpg",
+        "public/contributors/polish-academy-of-canada-62.jpg",
+        "public/contributors/polish-academy-of-canada-63.jpg",
+        "public/contributors/polish-academy-of-canada-64.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "Shkilna Rada",
+      "place": "Toronto (ON), Canada",
+      "lat": 43.6961806,
+      "lng": -79.5718501,
+      "sentTo": "",
+      "note": "Shkilna Rada, the Ukrainian Canadian School Board – Toronto Branch, learned about the project and invite students to write postcards to the Defenders.",
+      "images": [
+        "public/contributors/shkilna-rada-1.jpg",
+        "public/contributors/shkilna-rada-2.jpg",
+        "public/contributors/shkilna-rada-3.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "St. Francis Elementary School",
+      "place": "Richmond (QC), Canada",
+      "lat": 45.6536346,
+      "lng": -72.1410864,
+      "sentTo": "",
+      "note": "postcard writing with students from grade 3-4 class",
+      "images": [
+        "public/contributors/st-francis-elementary-school-1.jpg",
+        "public/contributors/st-francis-elementary-school-2.jpg",
+        "public/contributors/st-francis-elementary-school-3.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        ""
+      ]
+    },
+    {
+      "name": "Quebec Women's Institute",
+      "place": "Quebec (QC), Canada",
+      "lat": 46.8571419,
+      "lng": -71.3449155,
+      "sentTo": "",
+      "note": "Women's Institute groups across Quebec send batch after batch of cards to the front. At the Fordyce WI in Brigham, several members are retired teachers who still substitute and tutor; they introduced the project to their students, and one Grade 5 class sent a set of teddy-bear cards that reached the front lines.",
+      "images": [
+        "public/participants/qwi-1.jpg",
+        "public/participants/qwi-2.jpg",
+        "public/participants/qwi-3.jpg",
+        "public/participants/qwi-4.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "A few members are retired teachers who do some substitute teaching and tutoring. They introduced the project to students who were very excited to contribute cards.",
+        "Beautiful teddy cards from one Gr. 5 class."
+      ]
+    },
+    {
+      "name": "CYM",
+      "place": "Acton (ON), Canada",
+      "lat": 43.6295,
+      "lng": -80.0353,
+      "sentTo": "Millbrook",
+      "note": "Ukrainian Youth Association of Canada. On 5 July 2026, more than fifty young people at the Camp Weselka leadership camp in Acton wrote postcards to Defenders. Some have parents, siblings or family friends serving on the front.",
+      "images": [
+        "public/contributors/cym-montreal-1.jpg",
+        "public/contributors/cym-montreal-2.jpg",
+        "public/contributors/cym-montreal-3.jpg",
+        "public/contributors/cym-montreal-4.jpg",
+        "public/contributors/cym-montreal-5.jpg"
+      ],
+      "imageCaptions": [
+        "",
+        "",
+        "",
+        "",
+        ""
       ]
     }
   ]

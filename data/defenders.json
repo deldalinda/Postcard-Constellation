@@ -742,6 +742,62 @@
       "caption": "Aid and postcards reach the front line together",
       "w": 960,
       "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-107.jpg",
+      "date": "26-Jul",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-108.jpg",
+      "date": "26-Jul",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-109.jpg",
+      "date": "26-Jul",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-110.jpg",
+      "date": "26-Jul",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-111.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-112.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-113.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-114.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1536,
+      "h": 2048
     }
   ]
 }
