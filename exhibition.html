@@ -1,1 +1,172 @@
+<!doctype html>
+<html lang="en" data-release="round2">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Postcard Constellation — An Interactive Exhibition of Postcards to the Front Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="src/styles.css" />
+</head>
+<body>
+  <canvas id="starfield"></canvas>
 
+  <header id="topbar">
+    <div class="brand">
+      <h1>Postcard Constellation</h1>
+      <p class="tagline">An interactive exhibition of <em>Postcards to the Front</em></p>
+    </div>
+    <nav id="view-toggle" role="tablist">
+      <button id="btn-globe" class="active" role="tab" aria-selected="true">Trails</button>
+      <button id="btn-constellation" role="tab" aria-selected="false">Constellations</button>
+      <button id="btn-starlight" role="tab" aria-selected="false">Starlights</button>
+    </nav>
+  </header>
+
+  <div id="display-controls" aria-label="Display options">
+    <label class="switch"><input type="checkbox" id="tg-names" checked /><span>Participant names</span></label>
+    <label class="switch"><input type="checkbox" id="tg-cities" checked /><span>Place names</span></label>
+    <label class="switch"><input type="checkbox" id="tg-countries" /><span>Country borders</span></label>
+    <label class="switch"><input type="checkbox" id="tg-day" /><span>Daylight globe</span></label>
+  </div>
+
+  <!-- Small screens: the display toggles hide behind this draggable pebble -->
+  <button id="dc-fab" type="button" aria-label="Display options" title="Display options">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M3 6.5h14M3 13.5h14" />
+      <circle cx="8" cy="6.5" r="2.4" fill="#14133b" />
+      <circle cx="12.5" cy="13.5" r="2.4" fill="#14133b" />
+    </svg>
+  </button>
+
+  <div id="zoom-control" aria-label="Zoom">
+    <button id="zoom-in" aria-label="Zoom in">+</button>
+    <input id="zoom-range" type="range" min="0" max="1000" value="650" aria-label="Zoom level" />
+    <button id="zoom-out" aria-label="Zoom out">&minus;</button>
+  </div>
+
+  <main>
+    <section id="globe-view" class="view active">
+      <div id="globe"></div>
+      <div class="view-hint">Drag to spin the globe<br />click a glowing city to meet its writer</div>
+    </section>
+
+    <section id="constellation-view" class="view">
+      <canvas id="constellation"></canvas>
+      <aside id="mystery-card">
+        <button id="mc-min" type="button" aria-label="Minimize" title="Minimize">&#8722;</button>
+        <p class="mc-eyebrow">This month&rsquo;s mystery</p>
+        <p class="mc-q">What do these stars share?</p>
+        <p class="mc-body">One hidden thread connects everyone in this month&rsquo;s sky.
+          Send us your guess by <strong>20 October</strong> &mdash; correct answers enter a
+          draw to win an envelope full of postcards from Linda.</p>
+        <a class="mc-cta" href="mailto:deldal@gmail.com?subject=My%20guess%20%E2%80%94%20Postcard%20Constellation">&#10022;&nbsp; Send your guess</a>
+        <p class="mc-alt">or copy the address:
+          <button id="mc-copy" type="button">deldal@gmail.com</button></p>
+      </aside>
+      <button id="mystery-pill" type="button" hidden>&#10022;&nbsp; This month&rsquo;s mystery</button>
+      <aside id="answer-card">
+        <button id="ac-min" type="button" aria-label="Minimize" title="Minimize">&#8722;</button>
+        <p class="ac-eyebrow">Round one &middot; the answer</p>
+        <p class="ac-word">Postcrossing</p>
+        <p class="ac-body">The hidden thread through August&rsquo;s sky was
+          <strong>Postcrossing</strong> &mdash; the postcard-exchange community where those
+          writers found the project, and each other. They are lit in gold now, as
+          <strong>The Postcrossers</strong>. Guesses closed 20 August.</p>
+      </aside>
+      <button id="answer-pill" type="button" hidden>&#10022;&nbsp; Round one&rsquo;s answer</button>
+      <div class="view-hint">Every line is something shared<br />click a name to hear their voice</div>
+    </section>
+
+    <section id="starlight-view" class="view">
+      <div id="starlight"></div>
+    </section>
+  </main>
+
+  <aside id="panel" aria-hidden="true">
+    <button id="panel-close" aria-label="Close">&times;</button>
+    <div id="panel-content"></div>
+  </aside>
+
+  <!-- Site menu: the exhibition lives on its own page, so it carries its own
+       way back to the rest of postcardstothefrontcanada.com. Pure CSS toggle. -->
+  <details id="site-menu">
+    <summary>&#9776;&nbsp; Postcards to the Front</summary>
+    <nav class="site-menu-card">
+      <p class="sm-wordmark">Postcards to the Front</p>
+      <p class="sm-tagline">Canada &middot; &#1050;&#1072;&#1085;&#1072;&#1076;&#1072;</p>
+      <a href="https://postcardstothefrontcanada.com" target="_blank" rel="noopener">Home</a>
+      <a href="https://postcardstothefrontcanada.com/project-history/" target="_blank" rel="noopener">Project History</a>
+      <a href="https://postcardstothefrontcanada.com/about-us/" target="_blank" rel="noopener">About the Canada Branch</a>
+      <a href="https://postcardstothefrontcanada.com/blog-archives/" target="_blank" rel="noopener">Blog Archives</a>
+      <a href="https://postcardstothefrontcanada.com/international-newsletter" target="_blank" rel="noopener">International Newsletters</a>
+      <a href="https://postcardstothefrontcanada.com/contact/" target="_blank" rel="noopener">Contact</a>
+    </nav>
+  </details>
+
+  <!-- Contest guess form: shown instead of the mailto flow once a relay key
+       is configured (GUESS_FORM_KEY in main.js). -->
+  <div id="guess-modal" hidden>
+    <div class="gm-card">
+      <button id="gm-close" aria-label="Close">&times;</button>
+      <p class="mc-eyebrow">This month&rsquo;s mystery</p>
+      <p class="gm-title">What do these stars share?</p>
+      <form id="gm-form">
+        <label class="gm-label" for="gm-email">Your email</label>
+        <input id="gm-email" name="email" type="email" required placeholder="you@example.com" />
+        <label class="gm-label" for="gm-guess">Your guess</label>
+        <textarea id="gm-guess" name="message" required rows="3"
+          placeholder="I think the hidden thread is&hellip;"></textarea>
+        <button class="gm-send" type="submit">&#10022;&nbsp; Send my guess</button>
+        <p class="gm-note">Correct answers enter a draw for an envelope full of postcards.
+          Your email is used only to reach the winner.</p>
+      </form>
+      <div id="gm-done" hidden>
+        <p class="gm-done-star">&#10022;</p>
+        <p class="gm-title">Your guess is on its way!</p>
+        <p class="gm-note">Good luck &mdash; the draw takes place after 20 August.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="lightbox" hidden>
+    <button id="lb-close" type="button" aria-label="Close">&times;</button>
+    <button id="lb-prev" class="lb-arrow" type="button" aria-label="Previous photo">&#8249;</button>
+    <button id="lb-next" class="lb-arrow lb-right" type="button" aria-label="Next photo">&#8250;</button>
+    <figure>
+      <img id="lightbox-img" alt="Postcard, enlarged" />
+      <figcaption id="lightbox-cap"></figcaption>
+    </figure>
+  </div>
+
+
+  <script>
+    // Browsers block the app's modules and data files on file:// pages, so
+    // explain how to launch it properly instead of showing a blank sky.
+    if (location.protocol === "file:") {
+      document.addEventListener("DOMContentLoaded", function () {
+        var note = document.createElement("div");
+        note.style.cssText =
+          "position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;" +
+          "background:rgba(20,19,59,0.96);padding:24px;text-align:center;";
+        note.innerHTML =
+          '<div style="max-width:560px;font-family:Georgia,serif;color:#eceafb;">' +
+          '<h2 style="font-size:30px;font-weight:500;margin-bottom:14px;">One more step&hellip;</h2>' +
+          '<p style="font-size:19px;line-height:1.6;">The exhibition can&rsquo;t run straight from the file &mdash; ' +
+          "your browser blocks its data and videos for security. Instead, double-click " +
+          '<strong>&ldquo;Start Exhibition.command&rdquo;</strong> in the same folder. ' +
+          "It starts a tiny local server and opens the exhibition for you.</p></div>";
+        document.body.appendChild(note);
+      });
+    }
+  </script>
+  <!-- defer: parse the page without blocking on the 1.8 MB globe bundle;
+       deferred scripts run in order, so `Globe` exists before main.js -->
+  <script src="vendor/globe.gl.min.js" defer></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
