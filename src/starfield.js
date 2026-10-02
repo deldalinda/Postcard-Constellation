@@ -1,5 +1,7 @@
 // Ambient starfield behind every view — slow twinkle like the kiosk's night sky.
 
+import { onSleep, onWake } from "./awake.js";
+
 // A full-screen 2D canvas at the raw device pixel ratio is 3.0M pixels on a
 // phone, cleared and repainted every frame alongside the WebGL globe's own
 // render loop. Two full-screen surfaces animating at 60fps was enough for iOS
@@ -52,38 +54,23 @@ export function initStarfield(canvas) {
   }
 
   // This repainted for as long as the page was open, phone locked or not. iOS
-  // reclaims a tab that keeps working with nobody watching, so the loop stops
-  // when the page is hidden and, on a phone, after a spell of no interaction.
-  // Any touch restarts it.
-  const SF_IDLE_MS = PHONE ? 30000 : 0;
-  let idleT = null;
-
+  // reclaims a tab that keeps working with nobody watching, so the twinkle
+  // sleeps with the rest of the exhibition — see awake.js for when that is.
   function stop() {
     running = false;
     if (rafId) cancelAnimationFrame(rafId);
     rafId = null;
-    clearTimeout(idleT);
   }
 
   function start() {
-    if (!running) {
-      running = true;
-      rafId = requestAnimationFrame(frame);
-    }
-    if (SF_IDLE_MS) {
-      clearTimeout(idleT);
-      idleT = setTimeout(stop, SF_IDLE_MS);
-    }
+    if (running) return;
+    running = true;
+    rafId = requestAnimationFrame(frame);
   }
 
   window.addEventListener("resize", resize);
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stop();
-    else start();
-  });
-  ["pointerdown", "touchstart", "touchmove", "wheel", "keydown"].forEach((ev) =>
-    window.addEventListener(ev, start, { passive: true })
-  );
+  onSleep(stop);
+  onWake(start);
 
   resize();
   start();

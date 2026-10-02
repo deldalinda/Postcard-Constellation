@@ -18,6 +18,7 @@ export function initStarlight(container) {
   let kindled = false;
   let wall = null;
   let items = []; // { el, aspect, quote?, video? }
+  let waiting = 0; // handle of the "data not built yet" poll (see refresh)
 
   // A Defender-gallery entry whose `src` is a video (VideoPress or YouTube)
   // renders as an inline player rather than an <img>.
@@ -315,10 +316,15 @@ export function initStarlight(container) {
       if (built) {
         layout();
         kindle();
-      } else {
-        // data may still be loading on first show; lay out & kindle once it lands
-        const wait = setInterval(() => {
-          if (built) { clearInterval(wait); layout(); kindle(); }
+      } else if (!waiting) {
+        // Data may still be loading on first show; lay out & kindle once it
+        // lands. Bounded and single-flight: an unbounded 120ms poll kept the
+        // page waking eight times a second forever if the data never arrived,
+        // and every re-show used to start another one.
+        const started = Date.now();
+        waiting = setInterval(() => {
+          if (built) { clearInterval(waiting); waiting = 0; layout(); kindle(); }
+          else if (Date.now() - started > 15000) { clearInterval(waiting); waiting = 0; }
         }, 120);
       }
     },

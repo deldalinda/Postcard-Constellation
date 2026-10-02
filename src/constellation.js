@@ -9,6 +9,7 @@
 // few curated companion bonds.
 
 import { cityShort } from "./util.js";
+import { onSleep, onWake } from "./awake.js";
 
 // Phones get a 1.25x canvas instead of the raw 3x device ratio: a full-screen
 // 2D canvas at 3x is 3.0M pixels, and this view coexists with the WebGL globe.
@@ -417,10 +418,59 @@ export function initConstellation(canvas, data, onSelect) {
   }, { passive: false });
 
   // --- render -----------------------------------------------------------------
+  // This sky used to repaint at 60fps from load until the tab closed: while the
+  // globe was the view on screen and this whole section was hidden behind it,
+  // and with the phone face down in a pocket. A full-screen 2D canvas animating
+  // unwatched beside the globe's WebGL canvas is what iOS jettisons a content
+  // process for — the page came back reloaded, then crashed outright. It now
+  // paints only while it is the visible view, and — through the shared idle gate
+  // in awake.js — only while someone is there to see it.
   let frameCount = 0, lastError = null;
+  let rafId = null, paused = true;
+
+  // Inactive views keep their box and are hidden with visibility/opacity, not
+  // display:none — so offsetParent says nothing here. The .active class on the
+  // enclosing <section> is the real signal, and reading a class costs nothing.
+  const viewEl = canvas.closest(".view");
+  const viewActive = () => !viewEl || viewEl.classList.contains("active");
+  const onScreen = () => !document.hidden && viewActive();
+
+  // Leaving the view cross-fades it out over 0.6s (see .view in styles.css), so
+  // the sky keeps drifting for a beat after it stops being active rather than
+  // freezing mid-fade. A hidden tab stops immediately.
+  let offAt = 0;
+  function keepPainting(t) {
+    if (document.hidden) return false;
+    if (viewActive()) { offAt = 0; return true; }
+    if (!offAt) { offAt = t; return true; }
+    return t - offAt < 700;
+  }
+
+  function stop() {
+    paused = true;
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+
+  function start() {
+    paused = false;
+    offAt = 0;
+    if (rafId === null) rafId = requestAnimationFrame(frame);
+  }
+
+  const syncRunning = () => (onScreen() ? start() : stop());
+
+  onSleep(stop);
+  onWake(syncRunning);
+
   function frame(t) {
+    rafId = null;
+    if (paused) return;
+    // Nothing tells this loop when the visitor switches to another view, so it
+    // checks for itself each frame.
+    if (!keepPainting(t)) { stop(); return; }
     try { frameInner(t); } catch (err) { lastError = String(err.stack || err); }
-    requestAnimationFrame(frame);
+    if (!paused) rafId = requestAnimationFrame(frame);
   }
   function frameInner(t) {
     frameCount++;
@@ -581,7 +631,7 @@ export function initConstellation(canvas, data, onSelect) {
 
   // no resize listeners needed: the frame loop re-checks needsLayout() each frame
   layout();
-  requestAnimationFrame(frame);
+  syncRunning(); // stays stopped until this becomes the view on screen
 
   canvas.__debug = {
     nodes, figureEdges, groups,
@@ -593,6 +643,9 @@ export function initConstellation(canvas, data, onSelect) {
     selectParticipant(id) {
       select(id ? nodeById.get(id) ?? null : null);
     },
-    refresh() { if (needsLayout()) layout(); },
+    refresh() {
+      if (needsLayout()) layout();
+      syncRunning(); // main.js calls this when the view is shown
+    },
   };
 }

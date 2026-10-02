@@ -3,6 +3,7 @@
 
 import { cityShort, thumb } from "./util.js";
 import { openLightbox } from "./lightbox.js";
+import { onSleep, onWake } from "./awake.js";
 
 // Four gradient stops with a steep ramp at the end: each travelling dash
 // fades in along its tail and snaps bright at the tip, reading as an arrow.
@@ -41,6 +42,13 @@ const TILE_DAY = (x, y, l) =>
 const PHONE = window.innerWidth < 820;
 const NIGHT_TEX = PHONE ? "vendor/earth-night-mobile.jpg" : "vendor/earth-night.jpg";
 const DAY_TEX = PHONE ? "vendor/earth-day-mobile.jpg" : "vendor/earth-day.jpg";
+
+// The starburst overlay is a SECOND full-screen surface, stacked on the globe's
+// WebGL canvas. At a phone's raw 3x ratio that is a ~3.0M-pixel buffer, cleared
+// and repainted with a radial gradient per star every frame — the same cost the
+// globe renderer and the starfield are already capped for. Phones get 1x (the
+// bursts are soft glows, so the softening does not read); desktop keeps 2x.
+const BURST_DPR = PHONE ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
 const MIN_ALT = 0.10; // ~distance 110 — deepest (two extra zoom-in levels of city detail)
 const MAX_ALT = 2.2; // ~distance 320 — farthest (two farthest levels dropped)
@@ -243,19 +251,35 @@ export function initGlobe(container, data, onSelect) {
   // busy with no user interaction, which is why the page survived while being
   // touched and reloaded when left alone.
   //
-  // Rendering now stops whenever the page is hidden, and on a phone after a
-  // spell with no interaction. Any touch, scroll or key brings it straight
-  // back. Desktop only pauses when the tab is actually hidden.
-  const IDLE_MS = PHONE ? 30000 : 0;
-  let idleTimer = null;
+  // Rendering now follows the shared idle gate in awake.js: it stops whenever
+  // the page is hidden, and on a phone after a spell with no interaction. Any
+  // touch, scroll or key brings it straight back.
   let renderPaused = false;
+  // Pausing the globe while the starburst overlay (built further down) kept
+  // repainting left the tab burning a full-screen canvas at 60fps with nobody
+  // watching — which is precisely what iOS discards a content process for, and
+  // why the page came back reloaded and then crashed. The overlay now starts
+  // and stops with the renderer. `burstsReady` keeps the early resumeRender()
+  // below a no-op until the overlay actually exists.
+  let burstsReady = false;
+  let burstRaf = null;
+
+  function startBursts() {
+    if (!burstsReady || renderPaused || burstRaf !== null) return;
+    burstRaf = requestAnimationFrame(drawBursts);
+  }
+
+  function stopBursts() {
+    if (burstRaf !== null) cancelAnimationFrame(burstRaf);
+    burstRaf = null;
+  }
 
   function pauseRender() {
-    clearTimeout(idleTimer);
     if (!renderPaused) {
       globe.pauseAnimation();
       renderPaused = true;
     }
+    stopBursts();
   }
 
   function resumeRender() {
@@ -263,20 +287,11 @@ export function initGlobe(container, data, onSelect) {
       globe.resumeAnimation();
       renderPaused = false;
     }
-    if (IDLE_MS) {
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(pauseRender, IDLE_MS);
-    }
+    startBursts();
   }
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) pauseRender();
-    else resumeRender();
-  });
-  ["pointerdown", "touchstart", "touchmove", "wheel", "keydown"].forEach((ev) =>
-    window.addEventListener(ev, resumeRender, { passive: true })
-  );
-  resumeRender();
+  onSleep(pauseRender);
+  onWake(resumeRender);
 
   const controls = globe.controls();
   controls.enableDamping = false;
@@ -329,7 +344,7 @@ export function initGlobe(container, data, onSelect) {
   container.appendChild(burstCanvas);
   const bctx = burstCanvas.getContext("2d");
   function resizeBursts() {
-    const dpr = devicePixelRatio;
+    const dpr = BURST_DPR;
     burstCanvas.width = container.clientWidth * dpr;
     burstCanvas.height = container.clientHeight * dpr;
   }
@@ -361,7 +376,7 @@ export function initGlobe(container, data, onSelect) {
       g.addColorStop(0.35, `rgba(${rgb}, ${0.3 * alpha})`);
       g.addColorStop(1, `rgba(${rgb}, 0)`);
       bctx.strokeStyle = g;
-      bctx.lineWidth = (diag ? 0.6 : 0.95) * devicePixelRatio;
+      bctx.lineWidth = (diag ? 0.6 : 0.95) * BURST_DPR;
       bctx.beginPath();
       bctx.moveTo(x, y);
       bctx.lineTo(ex, ey);
@@ -379,7 +394,7 @@ export function initGlobe(container, data, onSelect) {
     // would eat into the disc and dim the star), then a fine bright ring
     // outside that. Dark-then-light reads against a lit city and against
     // empty ocean alike, and the core keeps its full brightness either way.
-    const ring = Math.max(1.2 * devicePixelRatio, size * 0.14);
+    const ring = Math.max(1.2 * BURST_DPR, size * 0.14);
     bctx.strokeStyle = `rgba(5, 4, 22, ${0.85 * alpha})`;
     bctx.lineWidth = ring;
     bctx.beginPath();
@@ -387,7 +402,7 @@ export function initGlobe(container, data, onSelect) {
     bctx.stroke();
 
     bctx.strokeStyle = `rgba(${rgb}, ${0.9 * alpha})`;
-    bctx.lineWidth = Math.max(1 * devicePixelRatio, size * 0.055);
+    bctx.lineWidth = Math.max(1 * BURST_DPR, size * 0.055);
     bctx.beginPath();
     bctx.arc(x, y, coreR + ring, 0, Math.PI * 2);
     bctx.stroke();
@@ -420,7 +435,7 @@ export function initGlobe(container, data, onSelect) {
 
     starPath(x, y, r);
     bctx.strokeStyle = `rgba(5, 4, 22, ${0.85 * alpha})`;
-    bctx.lineWidth = Math.max(1.6 * devicePixelRatio, r * 0.22);
+    bctx.lineWidth = Math.max(1.6 * BURST_DPR, r * 0.22);
     bctx.stroke();
     bctx.fillStyle = `rgba(${rgb}, ${0.92 * alpha})`;
     bctx.fill();
@@ -476,7 +491,8 @@ export function initGlobe(container, data, onSelect) {
     bctx.textBaseline = "alphabetic";
   }
   function drawBursts(t) {
-    const dpr = devicePixelRatio;
+    if (renderPaused) { burstRaf = null; return; }
+    const dpr = BURST_DPR;
     bctx.setTransform(1, 0, 0, 1, 0, 0);
     bctx.clearRect(0, 0, burstCanvas.width, burstCanvas.height);
     const cam = globe.camera().position;
@@ -561,9 +577,10 @@ export function initGlobe(container, data, onSelect) {
       );
       if (hovered) drawContributorPlaque(cp, sc.x * dpr, sc.y * dpr, dpr);
     }
-    requestAnimationFrame(drawBursts);
+    burstRaf = renderPaused ? null : requestAnimationFrame(drawBursts);
   }
-  requestAnimationFrame(drawBursts);
+  burstsReady = true;
+  startBursts();
 
   // The globe auto-rotates only when nothing wants it still: not mid-drag, not
   // hovering a star, and no lightbox open. Each interaction flips its own flag,
@@ -621,6 +638,10 @@ export function initGlobe(container, data, onSelect) {
       globe.globeTileEngineUrl(currentDay ? TILE_DAY : TILE_NIGHT).globeTileEngineMaxLevel(currentDay ? 12 : 8);
     } else {
       globe.globeTileEngineUrl(null);
+      // Dropping the engine leaves its fetched tiles cached, each one a GPU
+      // texture; on a phone that only ever grew. Re-entering the deep zoom
+      // refetches them, which is the cheaper of the two problems.
+      if (globe.globeTileEngineClearCache) globe.globeTileEngineClearCache();
     }
   }
   function updateTilesForZoom() {
@@ -638,7 +659,7 @@ export function initGlobe(container, data, onSelect) {
   // Poll distance so this works however the zoom changed (wheel, slider,
   // buttons, autorotate) — controls "change" alone misses programmatic zooms.
   controls.addEventListener("change", updateTilesForZoom);
-  setInterval(updateTilesForZoom, 400);
+  setInterval(() => { if (!renderPaused) updateTilesForZoom(); }, 400);
 
   function applyBasemap(day) {
     currentDay = day;
