@@ -43,12 +43,12 @@ const PHONE = window.innerWidth < 820;
 const NIGHT_TEX = PHONE ? "vendor/earth-night-mobile.jpg" : "vendor/earth-night.jpg";
 const DAY_TEX = PHONE ? "vendor/earth-day-mobile.jpg" : "vendor/earth-day.jpg";
 
-// The starburst overlay is a SECOND full-screen surface, stacked on the globe's
-// WebGL canvas. At a phone's raw 3x ratio that is a ~3.0M-pixel buffer, cleared
-// and repainted with a radial gradient per star every frame — the same cost the
-// globe renderer and the starfield are already capped for. Phones get 1x (the
-// bursts are soft glows, so the softening does not read); desktop keeps 2x.
-const BURST_DPR = PHONE ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+// The globe and its starburst overlay are two stacked full-screen surfaces, so
+// they share one ceiling. A phone's raw 3x ratio would make the overlay alone a
+// ~3.0M-pixel buffer, cleared and repainted with a radial gradient per star
+// every frame; 2x keeps the diffraction spikes sharp at a quarter of that.
+const MAX_DPR = 2;
+const BURST_DPR = Math.min(window.devicePixelRatio || 1, MAX_DPR);
 
 const MIN_ALT = 0.10; // ~distance 110 — deepest (two extra zoom-in levels of city detail)
 const MAX_ALT = 2.2; // ~distance 320 — farthest (two farthest levels dropped)
@@ -139,10 +139,14 @@ export function initGlobe(container, data, onSelect) {
   });
   const points = [...participantPoints, ...waypointPoints, ...contributorPoints];
 
-  // Antialiasing multiplies the drawing buffer by the sample count, which on a
-  // phone is the single largest remaining cost in the scene. Off there, and the
-  // GPU is asked for the low-power part on devices that have two.
-  const globe = Globe(PHONE ? { rendererConfig: { antialias: false, powerPreference: "low-power" } } : {})(container)
+  // Antialiasing (globe.gl's own default, four samples) was switched off here on
+  // phones, along with a 1x buffer, back when iOS kept discarding the tab. That
+  // turned out to be the wrong lever: what the phone could not afford was three
+  // animation loops that never stopped, not the picture quality — see awake.js.
+  // With the page going quiet whenever nobody is watching, the globe's limb and
+  // the country borders get their smooth edges back. The GPU is still asked for
+  // the low-power part on devices that have two.
+  const globe = Globe(PHONE ? { rendererConfig: { powerPreference: "low-power" } } : {})(container)
     .globeImageUrl(NIGHT_TEX)
     .backgroundColor("rgba(0,0,0,0)")
     .atmosphereColor("#7a74e2")
@@ -236,14 +240,13 @@ export function initGlobe(container, data, onSelect) {
   // Controls: zoom responds immediately. Damping was adding inertia that felt
   // like lag, so it is off; the auto-spin still pauses during wheel/drag so it
   // never fights the zoom. The distance range is trimmed to the crisp zone.
-  // A full-resolution antialiased drawing buffer on a 3x phone screen is on
-  // its own enough to get the tab discarded. Capping the ratio costs a little
-  // crispness on phones, where the globe is only a few hundred pixels across,
-  // and nothing on desktop.
-  // 1x on phones. At 1.5x the tab was still being discarded; the globe is only
-  // a few hundred pixels across there, so the loss is slight.
-  const maxDpr = PHONE ? 1 : 2;
-  globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
+  // Two device pixels per CSS pixel, phone and desktop alike — which is also
+  // globe.gl's own default. Phones were held at 1x while the tab was being
+  // discarded; at 2x the globe is crisp again, and the third multiple a modern
+  // iPhone screen offers costs more than twice as much for a difference you
+  // have to go looking for. MAX_DPR is the knob if a device ever struggles:
+  // lower it before reaching for the antialiasing.
+  globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_DPR));
 
   // Nothing here ever stopped rendering: the globe auto-rotates, the arcs
   // animate and the starfield repaints for as long as the page is open, even
