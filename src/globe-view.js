@@ -32,6 +32,16 @@ const TILE_DAY = (x, y, l) =>
 // Zoom range, expressed as camera altitude (globe radius = 100, so distance =
 // 100 * (1 + altitude)). The two farthest levels are trimmed; the near end now
 // goes deeper than the base texture can stay sharp, so tiles cover those.
+// Phones cannot resolve the full-size globe textures and do not have the GPU
+// memory for them: earth-night.jpg costs 32 MB once decoded and earth-day.jpg
+// 128 MB, against a per-tab budget of a few hundred. Mobile Safari was
+// discarding the tab a few seconds after load. Desktop keeps the originals;
+// phones load 2048x1024 copies, and the close-up detail still arrives from the
+// NASA tile engine below distance 155, which is unaffected by this.
+const PHONE = window.innerWidth < 820;
+const NIGHT_TEX = PHONE ? "vendor/earth-night-mobile.jpg" : "vendor/earth-night.jpg";
+const DAY_TEX = PHONE ? "vendor/earth-day-mobile.jpg" : "vendor/earth-day.jpg";
+
 const MIN_ALT = 0.10; // ~distance 110 — deepest (two extra zoom-in levels of city detail)
 const MAX_ALT = 2.2; // ~distance 320 — farthest (two farthest levels dropped)
 const DEFAULT_ALT = 2.2;
@@ -122,7 +132,7 @@ export function initGlobe(container, data, onSelect) {
   const points = [...participantPoints, ...waypointPoints, ...contributorPoints];
 
   const globe = Globe()(container)
-    .globeImageUrl("vendor/earth-night.jpg")
+    .globeImageUrl(NIGHT_TEX)
     .backgroundColor("rgba(0,0,0,0)")
     .atmosphereColor("#7a74e2")
     .atmosphereAltitude(0.22)
@@ -215,6 +225,13 @@ export function initGlobe(container, data, onSelect) {
   // Controls: zoom responds immediately. Damping was adding inertia that felt
   // like lag, so it is off; the auto-spin still pauses during wheel/drag so it
   // never fights the zoom. The distance range is trimmed to the crisp zone.
+  // A full-resolution antialiased drawing buffer on a 3x phone screen is on
+  // its own enough to get the tab discarded. Capping the ratio costs a little
+  // crispness on phones, where the globe is only a few hundred pixels across,
+  // and nothing on desktop.
+  const maxDpr = PHONE ? 1.5 : 2;
+  globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
+
   const controls = globe.controls();
   controls.enableDamping = false;
   controls.zoomSpeed = 1.1;
@@ -580,7 +597,7 @@ export function initGlobe(container, data, onSelect) {
   function applyBasemap(day) {
     currentDay = day;
     globe
-      .globeImageUrl(day ? "vendor/earth-day.jpg" : "vendor/earth-night.jpg")
+      .globeImageUrl(day ? DAY_TEX : NIGHT_TEX)
       .atmosphereColor(day ? "#a9c7ff" : "#7a74e2");
     setTiles(false);
     updateTilesForZoom(); // re-enable if already deep-zoomed
