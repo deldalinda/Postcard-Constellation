@@ -8,14 +8,18 @@
 // figures; connection is expressed through shared figure membership, plus a
 // few curated companion bonds.
 
-import { cityShort } from "./util.js";
+import { cityShort, canvasDpr } from "./util.js";
 import { onSleep, onWake } from "./awake.js";
 
-// Phones get a 1.25x canvas instead of the raw 3x device ratio: a full-screen
-// 2D canvas at 3x is 3.0M pixels, and this view coexists with the WebGL globe.
-// Every use below — sizing, hit testing and panning — goes through the same
-// constant, so the coordinate maths stays consistent. Desktop is unchanged.
-const CV_DPR = window.innerWidth < 820 ? 1.25 : (window.devicePixelRatio || 1);
+// Every use below — sizing, hit testing and panning — goes through this one
+// constant, so the coordinate maths stays consistent whatever it is set to.
+//
+// Phones were held at 1.25x for a while, and this view is the worst place for
+// that: every star's name and city is drawn as canvas text, so a third of the
+// screen's resolution showed up directly as soft, furry lettering over the one
+// thing visitors are here to read. It saved 3 MB on a canvas that no longer
+// paints at all unless this is the view on screen (see awake.js).
+const CV_DPR = canvasDpr();
 
 
 export function initConstellation(canvas, data, onSelect) {

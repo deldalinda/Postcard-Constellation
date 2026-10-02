@@ -1,5 +1,21 @@
 // Shared helpers.
 
+// Narrow screens. Phones differ from desktop in exactly two places now: the
+// daylight globe texture (see globe-view.js) and the starfield's repaint rate.
+export const PHONE = window.innerWidth < 820;
+
+// One ceiling for every canvas in the exhibition — the globe's WebGL buffer,
+// the starburst overlay stacked on it, the constellation sky and the ambient
+// starfield. Phones were pinned well below this (1x, 1.25x, antialiasing off)
+// while iOS kept discarding the tab, and it bought nothing: the cause was three
+// animation loops that never stopped, not resolution — see awake.js. Two device
+// pixels per CSS pixel is also globe.gl's own default, and the third multiple a
+// modern phone screen offers costs more than twice as much again for a
+// difference you have to go looking for. This is the knob if a device ever
+// struggles; lower it before reaching for the antialiasing.
+export const MAX_DPR = 2;
+export const canvasDpr = () => Math.min(window.devicePixelRatio || 1, MAX_DPR);
+
 // Just the town/city name — drop any "(Province)" and anything after a comma
 // (state, island, region) and any country. "Millbrook (ON)" → "Millbrook",
 // "Hobart, Tasmania" → "Hobart", "Sukagawa (Fukushima)" → "Sukagawa".

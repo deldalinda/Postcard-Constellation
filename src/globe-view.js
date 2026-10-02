@@ -1,7 +1,7 @@
 // 3D globe of postcard journeys: origin city → Millbrook hub → Ukraine.
 // Uses the vendored globe.gl UMD bundle (global `Globe`).
 
-import { cityShort, thumb } from "./util.js";
+import { cityShort, thumb, PHONE, canvasDpr } from "./util.js";
 import { openLightbox } from "./lightbox.js";
 import { onSleep, onWake } from "./awake.js";
 
@@ -33,22 +33,23 @@ const TILE_DAY = (x, y, l) =>
 // Zoom range, expressed as camera altitude (globe radius = 100, so distance =
 // 100 * (1 + altitude)). The two farthest levels are trimmed; the near end now
 // goes deeper than the base texture can stay sharp, so tiles cover those.
-// Phones cannot resolve the full-size globe textures and do not have the GPU
-// memory for them: earth-night.jpg costs 32 MB once decoded and earth-day.jpg
-// 128 MB, against a per-tab budget of a few hundred. Mobile Safari was
-// discarding the tab a few seconds after load. Desktop keeps the originals;
-// phones load 2048x1024 copies, and the close-up detail still arrives from the
+// The daylight globe is the one asset here that a phone genuinely cannot hold:
+// earth-day.jpg is 8192x4096, which is 128 MB once decoded into a GPU texture
+// (nearer 170 with mipmaps) against a per-tab budget of a few hundred. Phones
+// get a 2048x1024 copy of it, and the close-up detail still arrives from the
 // NASA tile engine below distance 155, which is unaffected by this.
-const PHONE = window.innerWidth < 820;
-const NIGHT_TEX = PHONE ? "vendor/earth-night-mobile.jpg" : "vendor/earth-night.jpg";
+//
+// The night globe is a different matter: 4096x2048 is 32 MB, which phones were
+// also dropped to 2048 for — and that one was never worth it. Night is the view
+// the exhibition opens in and the one visitors actually look at, so it keeps its
+// full resolution everywhere; blurring it bought a fifth of what the daylight
+// texture costs, and the continents went visibly blocky for it.
+const NIGHT_TEX = "vendor/earth-night.jpg";
 const DAY_TEX = PHONE ? "vendor/earth-day-mobile.jpg" : "vendor/earth-day.jpg";
 
 // The globe and its starburst overlay are two stacked full-screen surfaces, so
-// they share one ceiling. A phone's raw 3x ratio would make the overlay alone a
-// ~3.0M-pixel buffer, cleared and repainted with a radial gradient per star
-// every frame; 2x keeps the diffraction spikes sharp at a quarter of that.
-const MAX_DPR = 2;
-const BURST_DPR = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+// they share the ceiling every other canvas here uses (see MAX_DPR in util.js).
+const BURST_DPR = canvasDpr();
 
 const MIN_ALT = 0.10; // ~distance 110 — deepest (two extra zoom-in levels of city detail)
 const MAX_ALT = 2.2; // ~distance 320 — farthest (two farthest levels dropped)
@@ -144,9 +145,13 @@ export function initGlobe(container, data, onSelect) {
   // turned out to be the wrong lever: what the phone could not afford was three
   // animation loops that never stopped, not the picture quality — see awake.js.
   // With the page going quiet whenever nobody is watching, the globe's limb and
-  // the country borders get their smooth edges back. The GPU is still asked for
-  // the low-power part on devices that have two.
-  const globe = Globe(PHONE ? { rendererConfig: { powerPreference: "low-power" } } : {})(container)
+  // the country borders get their smooth edges back.
+  //
+  // A powerPreference: "low-power" hint went in alongside it. That one could
+  // never have done anything: it only chooses between two GPUs on machines that
+  // have two, and it was gated behind a phone-width screen — so it asked a
+  // single-GPU iPhone to pick the GPU it was already using.
+  const globe = Globe()(container)
     .globeImageUrl(NIGHT_TEX)
     .backgroundColor("rgba(0,0,0,0)")
     .atmosphereColor("#7a74e2")
@@ -240,13 +245,8 @@ export function initGlobe(container, data, onSelect) {
   // Controls: zoom responds immediately. Damping was adding inertia that felt
   // like lag, so it is off; the auto-spin still pauses during wheel/drag so it
   // never fights the zoom. The distance range is trimmed to the crisp zone.
-  // Two device pixels per CSS pixel, phone and desktop alike — which is also
-  // globe.gl's own default. Phones were held at 1x while the tab was being
-  // discarded; at 2x the globe is crisp again, and the third multiple a modern
-  // iPhone screen offers costs more than twice as much for a difference you
-  // have to go looking for. MAX_DPR is the knob if a device ever struggles:
-  // lower it before reaching for the antialiasing.
-  globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_DPR));
+  // Two device pixels per CSS pixel, phone and desktop alike (MAX_DPR, util.js).
+  globe.renderer().setPixelRatio(canvasDpr());
 
   // Nothing here ever stopped rendering: the globe auto-rotates, the arcs
   // animate and the starfield repaints for as long as the page is open, even

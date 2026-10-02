@@ -1,16 +1,19 @@
 // Ambient starfield behind every view — slow twinkle like the kiosk's night sky.
 
 import { onSleep, onWake } from "./awake.js";
+import { PHONE, canvasDpr } from "./util.js";
 
-// A full-screen 2D canvas at the raw device pixel ratio is 3.0M pixels on a
-// phone, cleared and repainted every frame alongside the WebGL globe's own
-// render loop. Two full-screen surfaces animating at 60fps was enough for iOS
-// to kill the content process a few seconds after load — silently, with
-// nothing in the console. Phones get a 1x buffer and a 30fps repaint; the
-// stars are 1-2px dots that twinkle slowly, so neither is visible. Desktop is
-// unchanged.
-const PHONE = window.innerWidth < 820;
-const SF_DPR = PHONE ? 1 : (window.devicePixelRatio || 1);
+// The twinkle is a full-screen 2D canvas, cleared and repainted alongside the
+// globe's own render loop, so it takes the shared ceiling (MAX_DPR, util.js).
+// It was held at 1x on phones for a while: the stars are 1-2px dots, and at a
+// third of the screen's resolution they lost their points and read as smudges,
+// which bought 3 MB and no stability — the repaint that mattered is the one
+// that used to run with nobody watching, and that stops now (see awake.js).
+const SF_DPR = canvasDpr();
+
+// Half the repaints on a phone, though. The twinkle cycles over seconds, so
+// 30fps is indistinguishable from 60 and costs half the fill — the one change
+// in this file that was free.
 const SF_MIN_FRAME_MS = PHONE ? 33 : 0;
 export function initStarfield(canvas) {
   const ctx = canvas.getContext("2d");
