@@ -131,7 +131,10 @@ export function initGlobe(container, data, onSelect) {
   });
   const points = [...participantPoints, ...waypointPoints, ...contributorPoints];
 
-  const globe = Globe()(container)
+  // Antialiasing multiplies the drawing buffer by the sample count, which on a
+  // phone is the single largest remaining cost in the scene. Off there, and the
+  // GPU is asked for the low-power part on devices that have two.
+  const globe = Globe(PHONE ? { rendererConfig: { antialias: false, powerPreference: "low-power" } } : {})(container)
     .globeImageUrl(NIGHT_TEX)
     .backgroundColor("rgba(0,0,0,0)")
     .atmosphereColor("#7a74e2")
@@ -229,7 +232,9 @@ export function initGlobe(container, data, onSelect) {
   // its own enough to get the tab discarded. Capping the ratio costs a little
   // crispness on phones, where the globe is only a few hundred pixels across,
   // and nothing on desktop.
-  const maxDpr = PHONE ? 1.5 : 2;
+  // 1x on phones. At 1.5x the tab was still being discarded; the globe is only
+  // a few hundred pixels across there, so the loss is slight.
+  const maxDpr = PHONE ? 1 : 2;
   globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
 
   const controls = globe.controls();
