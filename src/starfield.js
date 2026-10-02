@@ -13,6 +13,8 @@ const SF_MIN_FRAME_MS = PHONE ? 33 : 0;
 export function initStarfield(canvas) {
   const ctx = canvas.getContext("2d");
   let stars = [];
+  let running = false;
+  let rafId = null;
 
   function resize() {
     canvas.width = window.innerWidth * SF_DPR;
@@ -27,7 +29,15 @@ export function initStarfield(canvas) {
     }));
   }
 
+  let lastPaint = 0;
   function frame(t) {
+    if (!running) return;
+    // Slow twinkle: 30fps on a phone is indistinguishable and halves the fill.
+    if (SF_MIN_FRAME_MS && t - lastPaint < SF_MIN_FRAME_MS) {
+      rafId = requestAnimationFrame(frame);
+      return;
+    }
+    lastPaint = t;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "#eceafb";
     for (const s of stars) {
@@ -38,10 +48,43 @@ export function initStarfield(canvas) {
       ctx.fill();
     }
     ctx.globalAlpha = 1;
-    requestAnimationFrame(frame);
+    if (running) rafId = requestAnimationFrame(frame);
+  }
+
+  // This repainted for as long as the page was open, phone locked or not. iOS
+  // reclaims a tab that keeps working with nobody watching, so the loop stops
+  // when the page is hidden and, on a phone, after a spell of no interaction.
+  // Any touch restarts it.
+  const SF_IDLE_MS = PHONE ? 30000 : 0;
+  let idleT = null;
+
+  function stop() {
+    running = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+    clearTimeout(idleT);
+  }
+
+  function start() {
+    if (!running) {
+      running = true;
+      rafId = requestAnimationFrame(frame);
+    }
+    if (SF_IDLE_MS) {
+      clearTimeout(idleT);
+      idleT = setTimeout(stop, SF_IDLE_MS);
+    }
   }
 
   window.addEventListener("resize", resize);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) stop();
+    else start();
+  });
+  ["pointerdown", "touchstart", "touchmove", "wheel", "keydown"].forEach((ev) =>
+    window.addEventListener(ev, start, { passive: true })
+  );
+
   resize();
-  requestAnimationFrame(frame);
+  start();
 }

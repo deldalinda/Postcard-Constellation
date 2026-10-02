@@ -237,6 +237,47 @@ export function initGlobe(container, data, onSelect) {
   const maxDpr = PHONE ? 1 : 2;
   globe.renderer().setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
 
+  // Nothing here ever stopped rendering: the globe auto-rotates, the arcs
+  // animate and the starfield repaints for as long as the page is open, even
+  // with the phone face down in a pocket. iOS reclaims a tab that keeps a GPU
+  // busy with no user interaction, which is why the page survived while being
+  // touched and reloaded when left alone.
+  //
+  // Rendering now stops whenever the page is hidden, and on a phone after a
+  // spell with no interaction. Any touch, scroll or key brings it straight
+  // back. Desktop only pauses when the tab is actually hidden.
+  const IDLE_MS = PHONE ? 30000 : 0;
+  let idleTimer = null;
+  let renderPaused = false;
+
+  function pauseRender() {
+    clearTimeout(idleTimer);
+    if (!renderPaused) {
+      globe.pauseAnimation();
+      renderPaused = true;
+    }
+  }
+
+  function resumeRender() {
+    if (renderPaused) {
+      globe.resumeAnimation();
+      renderPaused = false;
+    }
+    if (IDLE_MS) {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(pauseRender, IDLE_MS);
+    }
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) pauseRender();
+    else resumeRender();
+  });
+  ["pointerdown", "touchstart", "touchmove", "wheel", "keydown"].forEach((ev) =>
+    window.addEventListener(ev, resumeRender, { passive: true })
+  );
+  resumeRender();
+
   const controls = globe.controls();
   controls.enableDamping = false;
   controls.zoomSpeed = 1.1;
