@@ -10,6 +10,13 @@
 
 import { cityShort } from "./util.js";
 
+// Phones get a 1.25x canvas instead of the raw 3x device ratio: a full-screen
+// 2D canvas at 3x is 3.0M pixels, and this view coexists with the WebGL globe.
+// Every use below — sizing, hit testing and panning — goes through the same
+// constant, so the coordinate maths stays consistent. Desktop is unchanged.
+const CV_DPR = window.innerWidth < 820 ? 1.25 : (window.devicePixelRatio || 1);
+
+
 export function initConstellation(canvas, data, onSelect) {
   const ctx = canvas.getContext("2d");
   const { participants, constellations = [] } = data;
@@ -268,13 +275,13 @@ export function initConstellation(canvas, data, onSelect) {
 
   function needsLayout() {
     return (
-      canvas.width !== Math.round(canvas.clientWidth * devicePixelRatio) ||
-      canvas.height !== Math.round(canvas.clientHeight * devicePixelRatio)
+      canvas.width !== Math.round(canvas.clientWidth * CV_DPR) ||
+      canvas.height !== Math.round(canvas.clientHeight * CV_DPR)
     );
   }
   function layout() {
-    W = canvas.width = Math.round(canvas.clientWidth * devicePixelRatio);
-    H = canvas.height = Math.round(canvas.clientHeight * devicePixelRatio);
+    W = canvas.width = Math.round(canvas.clientWidth * CV_DPR);
+    H = canvas.height = Math.round(canvas.clientHeight * CV_DPR);
     SCALE = Math.min(W, H) * 0.4;
   }
 
@@ -323,8 +330,8 @@ export function initConstellation(canvas, data, onSelect) {
 
   // --- interaction ------------------------------------------------------------
   function nodeAt(mx, my) {
-    const x = mx * devicePixelRatio, y = my * devicePixelRatio;
-    let best = null, bestD = 30 * devicePixelRatio;
+    const x = mx * CV_DPR, y = my * CV_DPR;
+    let best = null, bestD = 30 * CV_DPR;
     for (const n of nodes) {
       const d = Math.hypot(n.sx - x, n.sy - y);
       const r = (n.hitR || 20);
@@ -335,8 +342,8 @@ export function initConstellation(canvas, data, onSelect) {
   }
 
   function labelAt(mx, my) {
-    const x = mx * devicePixelRatio, y = my * devicePixelRatio;
-    let best = null, bestD = 26 * devicePixelRatio;
+    const x = mx * CV_DPR, y = my * CV_DPR;
+    let best = null, bestD = 26 * CV_DPR;
     for (const g of groups) {
       if (g._lsx == null) continue;
       const d = Math.hypot(g._lsx - x, g._lsy - y);
@@ -365,7 +372,7 @@ export function initConstellation(canvas, data, onSelect) {
   canvas.addEventListener("pointermove", (e) => {
     const r = canvas.getBoundingClientRect();
     if (panning) {
-      const s = devicePixelRatio; // pan lives in canvas (device) pixels
+      const s = CV_DPR; // pan lives in canvas (device) pixels
       cam.panX += (e.clientX - lastX) * s;
       cam.panY += (e.clientY - lastY) * s;
       targetPanX = cam.panX; targetPanY = cam.panY;
@@ -418,7 +425,7 @@ export function initConstellation(canvas, data, onSelect) {
   function frameInner(t) {
     frameCount++;
     if (needsLayout()) layout();
-    const dpr = devicePixelRatio;
+    const dpr = CV_DPR;
 
     if (!dragging && !selected && t >= spinResumeAt) targetRotY += 0.0008;
     cam.rotY += (targetRotY - cam.rotY) * 0.08;
