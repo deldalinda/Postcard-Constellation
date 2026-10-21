@@ -303,6 +303,34 @@ if (mystCard && mystPill) {
   setCollapsed(stored !== null ? stored === "1" : matchMedia("(max-width: 1010px)").matches);
 }
 
+// The answer card's words come from whichever figure grouping.js marks
+// `revealed`, so rotating a round is still only a flag move — the copy follows
+// the flag instead of being retyped into index.html each time. No revealed
+// figure on screen means no card.
+function fillAnswerCard() {
+  const card = document.getElementById("answer-card");
+  if (!card) return;
+  const g = (data.constellations || []).find((c) => c.revealed && c.answer);
+  if (!g) { card.remove(); document.getElementById("answer-pill")?.remove(); return; }
+  card.querySelector(".ac-eyebrow").textContent = `${g.answer.round} · the answer`;
+  card.querySelector(".ac-word").textContent = g.answer.word;
+  card.querySelector(".ac-body").innerHTML =
+    `${g.answer.line} They are lit in gold now, as <strong>${g.name}</strong>. ` +
+    `Guesses closed ${g.answer.closed}.`;
+  // How wide the net was thrown. Optional — a round whose answer was a proper
+  // noun has no neighbourhood to describe, and then the slot is removed rather
+  // than left as an empty paragraph taking up space.
+  const accept = card.querySelector(".ac-accept");
+  if (g.answer.accepted) accept.textContent = g.answer.accepted;
+  else accept.remove();
+  // The collapsed pill names the same round as the card it reopens — it used
+  // to carry "Round one's answer" as fixed text and went stale the moment the
+  // mystery rotated.
+  const label = document.querySelector("#answer-pill .ap-label");
+  if (label) label.textContent = `${g.answer.round}\u2019s answer`;
+}
+fillAnswerCard();
+
 // Answer card collapse — same pebble behaviour as the mystery card, remembered
 // separately so closing one does not close the other.
 const ansCard = document.getElementById("answer-card");

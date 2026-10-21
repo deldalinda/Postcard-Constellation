@@ -18,8 +18,13 @@ const FIGURES = [
   { key: "bookish",      name: "The Bookish",      caption: "at home with books and letters",  source: "hobby", mystery: true, hidden: true },
   { key: "openair",      name: "The Open Air",     caption: "at home under open sky",           source: "hobby", mystery: true, hidden: true },
   { key: "music",        name: "The Music-makers", caption: "song and dance",                   source: "hobby", hidden: true },
-  { key: "classroom",    name: "The Classroom",    caption: "classrooms, on both shores",       source: "profession", mystery: true },
-  { key: "postcrossers", name: "The Postcrossers", caption: "found through Postcrossing",        source: "foundVia", revealed: true, hidden: true },
+  { key: "classroom",    name: "The Classroom",    caption: "classrooms, on both shores",       source: "profession", revealed: true,
+    answer: { round: "Round two", word: "The classroom", closed: "20 October",
+      line: "The hidden thread through this sky was the classroom. Every one of these writers teaches, studies, or carried the project into a school, a heritage school or a summer camp \u2014 on both shores.",
+      accepted: "We were not after exact words: education, teaching, studying, teachers, students, schools \u2014 any of them would have counted as a correct answer." } },
+  { key: "postcrossers", name: "The Postcrossers", caption: "found through Postcrossing",        source: "foundVia", hidden: true,
+    answer: { round: "Round one", word: "Postcrossing", closed: "20 August",
+      line: "The hidden thread through August\u2019s sky was Postcrossing \u2014 the postcard-exchange community where those writers found the project, and each other." } },
   { key: "grapevine",    name: "The Grapevine",    caption: "brought by a friend",              source: "foundVia", hidden: true },
   { key: "headlines",    name: "The Headlines",    caption: "found via news & social media",     source: "foundVia", hidden: true },
   { key: "searchers",    name: "The Searchers",    caption: "found by searching",               source: "foundVia", hidden: true },
@@ -89,5 +94,6 @@ export function buildConstellations(participants) {
     .filter((f) => members.get(f.key).length >= 3)
     .map((f) => ({ key: f.key, name: f.name, caption: f.caption,
                    mystery: !!f.mystery, revealed: !!f.revealed,
+                   answer: f.answer || null,
                    members: members.get(f.key) }));
 }

@@ -1200,6 +1200,18 @@ body[data-view="starlight"] #topbar {
   margin: 0;
 }
 #answer-card .ac-body strong { color: #eceafb; font-weight: 500; }
+/* The acceptance range: a footnote under the answer, set quieter and divided
+   from it, so the card reads as answer-then-aside rather than one long block. */
+#answer-card .ac-accept {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #9aa0cc;
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(236, 234, 251, 0.14);
+}
 #answer-pill {
   position: absolute;
   right: 26px;
@@ -1228,11 +1240,14 @@ body[data-view="starlight"] #topbar {
 /* Release gate. In the "revelation" window (21 Aug -> next newsletter) the sky
    carries only round one's answer, so the mystery card must not ask about a
    figure that is not drawn. tools/release.py sets the attribute. */
+/* Two phases, not one per round: a live round shows the mystery card, a
+   revelation shows the answer card. Which FIGURE is being asked about lives in
+   grouping.js, so these two rules never need another variant. */
 [data-release="revelation"] #mystery-card,
 [data-release="revelation"] #mystery-pill { display: none !important; }
 /* In exhibition 2 round one is old news — the answer lives in the newsletter. */
-[data-release="round2"] #answer-card,
-[data-release="round2"] #answer-pill { display: none !important; }
+[data-release="mystery"] #answer-card,
+[data-release="mystery"] #answer-pill { display: none !important; }
 
 /* Narrow screens: the topbar owns the top-left, so drop the card below it. */
 @media (max-width: 1010px) {
