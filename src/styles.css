@@ -1240,14 +1240,10 @@ body[data-view="starlight"] #topbar {
 /* Release gate. In the "revelation" window (21 Aug -> next newsletter) the sky
    carries only round one's answer, so the mystery card must not ask about a
    figure that is not drawn. tools/release.py sets the attribute. */
-/* Two phases, not one per round: a live round shows the mystery card, a
-   revelation shows the answer card. Which FIGURE is being asked about lives in
-   grouping.js, so these two rules never need another variant. */
-[data-release="revelation"] #mystery-card,
-[data-release="revelation"] #mystery-pill { display: none !important; }
-/* In exhibition 2 round one is old news — the answer lives in the newsletter. */
-[data-release="mystery"] #answer-card,
-[data-release="mystery"] #answer-pill { display: none !important; }
+/* Which of the mystery / answer cards belongs on screen is decided in main.js
+   (setGuessPhase) from the figures themselves, and the other is removed from
+   the DOM. There is deliberately no CSS gate here: a rule keyed to an
+   attribute in index.html can disagree with a cached copy of that file. */
 
 /* Narrow screens: the topbar owns the top-left, so drop the card below it. */
 @media (max-width: 1010px) {

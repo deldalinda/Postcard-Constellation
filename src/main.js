@@ -307,29 +307,57 @@ if (mystCard && mystPill) {
 // `revealed`, so rotating a round is still only a flag move — the copy follows
 // the flag instead of being retyped into index.html each time. No revealed
 // figure on screen means no card.
-function fillAnswerCard() {
+// Which card belongs on screen is decided HERE, from the figures themselves —
+// not from a `data-release` attribute in index.html and a matching CSS rule.
+// That pairing could go stale: GitHub Pages serves these files with a ten
+// minute cache and no version strings, so a browser could hold yesterday's
+// index.html beside today's stylesheet, match neither gate, and show the
+// mystery card and the answer card at once. One source of truth, and the card
+// that does not belong is removed rather than merely hidden.
+function setGuessPhase() {
+  const figures = data.constellations || [];
+  const revealed = figures.find((c) => c.revealed && c.answer);
+  const drop = (id) => document.getElementById(id)?.remove();
+
+  if (!revealed) {                       // a round is running: keep the question
+    drop("answer-card");
+    drop("answer-pill");
+    return;
+  }
+  drop("mystery-card");                  // guesses are closed: keep the answer
+  drop("mystery-pill");
+
   const card = document.getElementById("answer-card");
   if (!card) return;
-  const g = (data.constellations || []).find((c) => c.revealed && c.answer);
-  if (!g) { card.remove(); document.getElementById("answer-pill")?.remove(); return; }
-  card.querySelector(".ac-eyebrow").textContent = `${g.answer.round} · the answer`;
-  card.querySelector(".ac-word").textContent = g.answer.word;
-  card.querySelector(".ac-body").innerHTML =
-    `${g.answer.line} They are lit in gold now, as <strong>${g.name}</strong>. ` +
-    `Guesses closed ${g.answer.closed}.`;
+  const g = revealed;
+  const set = (sel, text) => { const el = card.querySelector(sel); if (el) el.textContent = text; };
+  set(".ac-eyebrow", `${g.answer.round} · the answer`);
+  set(".ac-word", g.answer.word);
+  const body = card.querySelector(".ac-body");
+  if (body) {
+    body.innerHTML = `${g.answer.line} They are lit in gold now, as ` +
+      `<strong>${g.name}</strong>. Guesses closed ${g.answer.closed}.`;
+  }
   // How wide the net was thrown. Optional — a round whose answer was a proper
-  // noun has no neighbourhood to describe, and then the slot is removed rather
-  // than left as an empty paragraph taking up space.
+  // noun has no neighbourhood to describe, and then the slot goes rather than
+  // sit empty. querySelector may also miss it on a stale index.html, which is
+  // why every lookup here tolerates absence.
   const accept = card.querySelector(".ac-accept");
-  if (g.answer.accepted) accept.textContent = g.answer.accepted;
-  else accept.remove();
-  // The collapsed pill names the same round as the card it reopens — it used
-  // to carry "Round one's answer" as fixed text and went stale the moment the
-  // mystery rotated.
+  if (accept && g.answer.accepted) accept.textContent = g.answer.accepted;
+  else accept?.remove();
+
+  // The collapsed pill names the round it reopens. A cached index.html may
+  // predate the .ap-label span and carry the previous round's name as fixed
+  // text, so fall back to rewriting the pill itself, keeping its star glyph.
+  const text = `${g.answer.round}\u2019s answer`;
   const label = document.querySelector("#answer-pill .ap-label");
-  if (label) label.textContent = `${g.answer.round}\u2019s answer`;
+  if (label) label.textContent = text;
+  else {
+    const pill = document.getElementById("answer-pill");
+    if (pill) pill.innerHTML = `<span class="ap-star">&#10022;</span> ${text}`;
+  }
 }
-fillAnswerCard();
+setGuessPhase();
 
 // Answer card collapse — same pebble behaviour as the mystery card, remembered
 // separately so closing one does not close the other.
