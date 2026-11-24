@@ -677,6 +677,8 @@ main { position: fixed; inset: 0; z-index: 5; }
   border-bottom: 1px solid currentColor;
 }
 .pb-read:hover { color: #a8811d; }
+.pb-reads { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; }
+.pb-reads .pb-read { margin-top: 0; }
 
 /* ---- Starlights: the Defenders' collective gallery ---- */
 /* "Every card is a ray of sunshine in the kingdom of darkness." — the room
@@ -981,6 +983,15 @@ body[data-view="starlight"] #topbar {
   margin: 0 0 16px;
 }
 #mystery-card .mc-body strong { color: #e8c476; font-weight: 500; }
+/* The round's hint: an aside under the invitation, quieter than the body. */
+#mystery-card .mc-hint {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #e8c476;
+  margin: -6px 0 16px;
+}
 #mystery-card .mc-cta {
   display: inline-block;
   font-family: var(--sans);

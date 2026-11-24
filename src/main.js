@@ -322,6 +322,19 @@ function setGuessPhase() {
   if (!revealed) {                       // a round is running: keep the question
     drop("answer-card");
     drop("answer-pill");
+    // The closing date and the hint belong to the figure being asked about,
+    // so a new round never needs this card retyped. A stale index.html may
+    // lack the slots and carry the old date in a bare <strong>; fall back to it.
+    const q = figures.find((c) => c.mystery && c.question)?.question;
+    const myst = document.getElementById("mystery-card");
+    if (q && myst) {
+      const date = myst.querySelector(".mc-date") || myst.querySelector(".mc-body strong");
+      if (date && q.closes) date.textContent = q.closes;
+      const hint = myst.querySelector(".mc-hint");
+      if (hint) { if (q.hint) hint.textContent = q.hint; else hint.remove(); }
+    } else {
+      myst?.querySelector(".mc-hint")?.remove();
+    }
     return;
   }
   drop("mystery-card");                  // guesses are closed: keep the answer

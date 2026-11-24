@@ -63,6 +63,7 @@ export const GEO = {
   Kharkiv: { lat: 49.9935, lng: 36.2304, country: "Ukraine" },
   Zaporizhzhia: { lat: 47.8388, lng: 35.1396, country: "Ukraine" },
   Ternopil: { lat: 49.5535, lng: 25.5948, country: "Ukraine" }, // Andriy's home; serving location undisclosed
+  Vinnytsia: { lat: 49.2331, lng: 28.4682, country: "Ukraine" }, // Soldiers Kitchen sewing team: Kerry's adaptive T-shirts go straight here
 };
 
 // Normalize a raw city string to a GEO key: drop "(Province)" and anything after

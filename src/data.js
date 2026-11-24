@@ -67,6 +67,11 @@ export async function loadData() {
     contributors = (await (await fetch("data/contributors.json", { cache: "no-cache" })).json()).contributors || [];
   } catch { /* no contributors file */ }
 
+  // A writer who posts STRAIGHT to the Ukraine base draws their own trail in
+  // gold, like every writer → hub leg — not in the blue kept for the hubs'
+  // trunk routes into Ukraine. Roland sends from Darmstadt (Linda, 22 Nov 2026).
+  const GOLD_TRAIL = new Set(["roland"]);
+
   // default globe arcs — one per participant's first leg (city → Sent to)
   const arcs = [];
   for (const p of participants) {
@@ -77,7 +82,7 @@ export async function loadData() {
       startLat: p.lat, startLng: p.lng,
       endLat: dest.lat, endLng: dest.lng,
       fromKey: p.cityKey, toKey: p.sentToKey,
-      toUkraine: dest.country === "Ukraine",
+      toUkraine: dest.country === "Ukraine" && !GOLD_TRAIL.has(p.id),
     });
   }
   // Trunk legs (hub → onward) that no participant's own first leg already

@@ -52,6 +52,20 @@ export function initPanel(data, { onShowJourney, onClose, onLightbox }) {
     return postcardBack(p);
   }
 
+  // "Read the full interview" — or, for someone with several stories, one
+  // link per story, each named by its title so the reader can tell them apart.
+  function readLinks(m, pdfPage) {
+    if (!m?.url) return "";
+    const pageOf = (u) => (u.match(/#page=(\d+)/) || [])[1];
+    const tail = (pg) => (pg ? ` &mdash; newsletter p.&nbsp;${pg}` : "");
+    if (!(m.links?.length > 1)) {
+      return `<a class="pb-read" href="${m.url}" target="_blank" rel="noopener">Read the full interview${tail(pdfPage)} &#8594;</a>`;
+    }
+    return `<div class="pb-reads">${m.links
+      .map((l) => `<a class="pb-read" href="${l.url}" target="_blank" rel="noopener">${l.title || "Read the full story"}${tail(pageOf(l.url))} &#8594;</a>`)
+      .join("")}</div>`;
+  }
+
   // Written interviews render as the back of a postcard: pull-quote in the
   // message area, portrait (or a decorative stamp) in the stamp corner, the
   // participant's city as the postmark, context line, and the blog link.
@@ -79,7 +93,7 @@ export function initPanel(data, { onShowJourney, onClose, onLightbox }) {
           </div>
         </div>
         ${p.quoteContext ? `<p class="pb-context">${p.quoteContext}</p>` : ""}
-        ${m?.url && opts.link !== false ? `<a class="pb-read" href="${m.url}" target="_blank" rel="noopener">Read the full interview${pdfPage ? ` &mdash; newsletter p.&nbsp;${pdfPage}` : ""} &#8594;</a>` : ""}
+        ${opts.link !== false ? readLinks(m, pdfPage) : ""}
       </div>`;
   }
 

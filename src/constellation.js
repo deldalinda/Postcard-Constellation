@@ -161,6 +161,45 @@ export function initConstellation(canvas, data, onSelect) {
       mx /= N; my /= N; mz /= N;
       for (let i = 0; i < N; i++) { nodes[i].bx -= mx; nodes[i].by -= my; nodes[i].bz -= mz; }
     }
+
+    // Lone stars, spread evenly all round the figures (Linda, 22 Nov 2026).
+    // In a small sky the figures settle on one side and the push above herds
+    // every lone star to the other, so the sky looks lopsided. Instead: centre
+    // the sky on the FIGURES, then seat the lone stars on a golden-spiral set of
+    // directions covering the whole sphere, at varied depths, and let them
+    // shuffle just enough to keep clear of everyone else.
+    const lone = nodes.filter((n) => !n.groups.length);
+    const fig = nodes.filter((n) => n.groups.length);
+    if (lone.length && fig.length) {
+      let cx = 0, cy = 0, cz = 0;
+      for (const n of fig) { cx += n.bx; cy += n.by; cz += n.bz; }
+      cx /= fig.length; cy /= fig.length; cz /= fig.length;
+      for (const n of nodes) { n.bx -= cx; n.by -= cy; n.bz -= cz; }
+      lone.sort((a, b) => (a.p.id < b.p.id ? -1 : 1));
+      const L = lone.length;
+      const turn = hash01(lone.map((n) => n.p.id).join("|")) * Math.PI * 2;
+      lone.forEach((n, i) => {
+        const yy = 1 - ((i + 0.5) / L) * 2;
+        const rr = Math.sqrt(Math.max(0, 1 - yy * yy));
+        const th = i * spiral + turn;
+        const rad = 0.62 + 0.36 * hash01(n.p.id + "|depth"); // near and far, never on the wall
+        n.bx = Math.cos(th) * rr * rad; n.by = yy * rad; n.bz = Math.sin(th) * rr * rad;
+      });
+      for (let pass = 0; pass < 80; pass++) {
+        for (const a of lone) {
+          for (const b of nodes) {
+            if (a === b) continue;
+            const dx = a.bx - b.bx, dy = a.by - b.by, dz = a.bz - b.bz;
+            const d = Math.hypot(dx, dy, dz) || 1e-6;
+            if (d >= MIN_SEP) continue;
+            const f = 0.35 * (MIN_SEP - d) / d;
+            a.bx += dx * f; a.by += dy * f; a.bz += dz * f;
+          }
+          const r = Math.hypot(a.bx, a.by, a.bz);
+          if (r > R_MAX * 0.95) { const s = R_MAX * 0.95 / r; a.bx *= s; a.by *= s; a.bz *= s; }
+        }
+      }
+    }
     recentre();
   }
 
@@ -357,6 +396,18 @@ export function initConstellation(canvas, data, onSelect) {
     return best;
   }
 
+  // The mystery's "?" is hovered exactly as a figure name is: it lights its own
+  // stars and dims every name outside the figure. It sits among those stars,
+  // often under a long name's hit box, so right on the glyph it wins over them.
+  function mysteryAt(mx, my) {
+    const x = mx * CV_DPR, y = my * CV_DPR;
+    for (const g of groups) {
+      if (!g.mystery || g._lsx == null) continue;
+      if (Math.hypot(g._lsx - x, g._lsy - y) < 24 * CV_DPR) return g;
+    }
+    return null;
+  }
+
   let dragging = false, panning = false, dragMoved = false, lastX = 0, lastY = 0;
   let spinResumeAt = 0; // idle auto-rotation stays paused until this timestamp
   canvas.addEventListener("pointerdown", (e) => {
@@ -393,8 +444,9 @@ export function initConstellation(canvas, data, onSelect) {
       lastX = e.clientX; lastY = e.clientY; hovered = null; hoveredGroup = null;
       return;
     }
-    hovered = nodeAt(e.clientX - r.left, e.clientY - r.top);
-    hoveredGroup = hovered ? null : labelAt(e.clientX - r.left, e.clientY - r.top);
+    const mq = mysteryAt(e.clientX - r.left, e.clientY - r.top);
+    hovered = mq ? null : nodeAt(e.clientX - r.left, e.clientY - r.top);
+    hoveredGroup = mq || (hovered ? null : labelAt(e.clientX - r.left, e.clientY - r.top));
     canvas.style.cursor = hovered || hoveredGroup ? "pointer" : "grab";
   });
   canvas.addEventListener("pointerleave", () => { hovered = null; hoveredGroup = null; });
@@ -409,6 +461,7 @@ export function initConstellation(canvas, data, onSelect) {
     spinResumeAt = performance.now() + 4000; // a click/drag freezes the drift briefly
     if (dragMoved) return;
     const r = canvas.getBoundingClientRect();
+    if (mysteryAt(e.clientX - r.left, e.clientY - r.top)) return; // a click on "?" picks no star
     const n = nodeAt(e.clientX - r.left, e.clientY - r.top);
     if (n) { select(n); onSelect(n.p.id); }
     else { select(null); onSelect(null); }
@@ -476,6 +529,65 @@ export function initConstellation(canvas, data, onSelect) {
     try { frameInner(t); } catch (err) { lastError = String(err.stack || err); }
     if (!paused) rafId = requestAnimationFrame(frame);
   }
+  // The mystery figure's mark: a gold "?" that breathes softly in its own
+  // halo, with two four-pointed glints turning about it. Hovering it lights
+  // the figure's stars, as a name does, but nothing ever says what it is.
+  function sparkle(x, y, r, rot, alpha) {
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(rot);
+    ctx.globalAlpha = alpha;
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+    g.addColorStop(0, "rgba(255, 250, 230, 1)");
+    g.addColorStop(0.35, "rgba(255, 226, 150, 0.85)");
+    g.addColorStop(1, "rgba(232, 196, 118, 0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    for (let k = 0; k < 4; k++) {
+      const a = (k * Math.PI) / 2;
+      ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+      ctx.lineTo(Math.cos(a + Math.PI / 4) * r * 0.16, Math.sin(a + Math.PI / 4) * r * 0.16);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+  function drawMysteryMark(pr, t, dpr, alpha) {
+    if (alpha <= 0.01) return;
+    const breathe = 0.5 + 0.5 * Math.sin(t / 820);
+    const size = 46 * dpr;
+    const x = pr.sx, y = pr.sy;
+    ctx.save();
+    // halo
+    const hr = size * (1.05 + 0.1 * breathe);
+    const halo = ctx.createRadialGradient(x, y, 0, x, y, hr);
+    halo.addColorStop(0, `rgba(255, 220, 140, ${(0.30 + 0.12 * breathe) * alpha})`);
+    halo.addColorStop(0.45, `rgba(232, 180, 90, ${(0.12 + 0.06 * breathe) * alpha})`);
+    halo.addColorStop(1, "rgba(232, 180, 90, 0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath(); ctx.arc(x, y, hr, 0, Math.PI * 2); ctx.fill();
+    // the glyph: glowing pass, then a crisp gilded pass on top
+    ctx.font = `600 ${size}px "Cormorant Garamond", Georgia, serif`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    const gold = ctx.createLinearGradient(x, y - size / 2, x, y + size / 2);
+    gold.addColorStop(0, "rgba(255, 246, 214, 1)");
+    gold.addColorStop(0.5, "rgba(244, 204, 112, 1)");
+    gold.addColorStop(1, "rgba(206, 150, 52, 1)");
+    ctx.globalAlpha = alpha;
+    ctx.shadowColor = "rgba(255, 206, 110, 0.95)";
+    ctx.shadowBlur = (14 + 10 * breathe) * dpr;
+    ctx.fillStyle = gold;
+    ctx.fillText("?", x, y);
+    ctx.shadowBlur = 4 * dpr;
+    ctx.fillText("?", x, y);
+    ctx.restore();
+    // two glints, out of step with each other
+    const tw1 = 0.5 + 0.5 * Math.sin(t / 530);
+    const tw2 = 0.5 + 0.5 * Math.sin(t / 610 + 2.1);
+    sparkle(x + size * 0.36, y - size * 0.42, (7 + 5 * tw1) * dpr, t / 2600, alpha * (0.55 + 0.45 * tw1));
+    sparkle(x - size * 0.3, y + size * 0.34, (4 + 3 * tw2) * dpr, -t / 3100, alpha * (0.4 + 0.5 * tw2));
+    ctx.textBaseline = "alphabetic";
+  }
+
   function frameInner(t) {
     frameCount++;
     if (needsLayout()) layout();
@@ -531,15 +643,45 @@ export function initConstellation(canvas, data, onSelect) {
       ctx.stroke();
     }
 
-    // constellation names — printed on the sky like a celestial map
+    // constellation names — printed on the sky like a celestial map.
+    // The 3D spacing above keeps label anchors apart on the sphere, but two
+    // anchors far apart in DEPTH can still project onto the same spot (round
+    // three: The Philatelists over The Music-makers). So settle them on screen
+    // too: walking top to bottom, a name whose box collides with one already
+    // placed slides down just far enough to clear it. The shift is continuous
+    // in the overlap, so labels glide rather than jump as the sky turns.
+    const LBL_H = 36 * dpr;                     // name + caption, one block
+    ctx.font = `500 ${12.5 * dpr}px "Jost", sans-serif`;
+    const placed = [];
     for (const g of groups) {
-      // a mystery figure never shows its name (nor offers a hover target):
-      // visitors are left to guess what its stars share
-      if (g.mystery) { g._lsx = null; continue; }
       const dir = g.labelDir || g.c;
       const pr = projectDir(dir.x, dir.y, dir.z);
-      if (pr.depth < -0.4) { g._lsx = null; continue; } // clearly behind — not hoverable
+      if (pr.depth < -0.4) { g._lsx = null; g._pr = null; continue; } // clearly behind — not hoverable
+      // a mystery figure never shows its name: it is marked by a shining "?"
+      // instead (drawn below), which takes a label's place on the sky
+      g._pr = { sx: pr.sx, sy: pr.sy, depth: pr.depth,
+                w: g.mystery ? 44 * dpr
+                  : ctx.measureText(g.name.toUpperCase().split("").join(" ")).width + 12 * dpr };
+      placed.push(g);
+    }
+    placed.sort((a, b) => a._pr.sy - b._pr.sy);
+    for (let i = 0; i < placed.length; i++) {
+      const p = placed[i]._pr;
+      for (let j = 0; j < i; j++) {
+        const q = placed[j]._pr;
+        if (Math.abs(p.sx - q.sx) >= (p.w + q.w) / 2) continue;
+        if (p.sy - q.sy < LBL_H) p.sy = q.sy + LBL_H;
+      }
+    }
+    for (const g of groups) {
+      if (!g._pr) continue;
+      const pr = g._pr;
       g._lsx = pr.sx; g._lsy = pr.sy;
+      if (g.mystery) {
+        drawMysteryMark(pr, t, dpr, Math.min(1, (pr.depth + 0.75) * 1.1) *
+          (activeGroups && !activeGroups.includes(g) ? 0.35 : 1));
+        continue;
+      }
       const a = Math.min(1, (pr.depth + 0.75) * 1.1) *
         (activeGroups && !activeGroups.includes(g) ? 0.3 : 0.85);
       ctx.globalAlpha = a;
