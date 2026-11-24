@@ -798,6 +798,76 @@
       "caption": "Postcards arrive at the front lines",
       "w": 1536,
       "h": 2048
+    },
+    {
+      "src": "public/defenders/starlight-115.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1280,
+      "h": 960
+    },
+    {
+      "src": "public/defenders/starlight-116.jpg",
+      "date": "26-Aug",
+      "caption": "Postcards arrive at the front lines",
+      "w": 960,
+      "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-117.jpg",
+      "date": "26-Sep",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1280,
+      "h": 960
+    },
+    {
+      "src": "public/defenders/starlight-118.jpg",
+      "date": "26-Sep",
+      "caption": "Postcards arrive at the front lines",
+      "w": 960,
+      "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-119.jpg",
+      "date": "26-Sep",
+      "caption": "Postcards arrive at the front lines",
+      "w": 1200,
+      "h": 1600
+    },
+    {
+      "src": "public/defenders/starlight-120.jpg",
+      "date": "26-Sep",
+      "caption": "A Defender’s mirror framed with postcards",
+      "w": 1552,
+      "h": 1600
+    },
+    {
+      "src": "public/defenders/starlight-121.jpg",
+      "date": "26-Sep",
+      "caption": "Postcards arrive at the front lines",
+      "w": 960,
+      "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-122.jpg",
+      "date": "26-Oct",
+      "caption": "Adaptive T-shirts and postcards from Australia reach a wounded Defender",
+      "w": 960,
+      "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-123.jpg",
+      "date": "26-Oct",
+      "caption": "Adaptive T-shirts and postcards from Australia reach a wounded Defender",
+      "w": 960,
+      "h": 1280
+    },
+    {
+      "src": "public/defenders/starlight-124.jpg",
+      "date": "26-Oct",
+      "caption": "Adaptive T-shirts and postcards from Australia reach a wounded Defender",
+      "w": 960,
+      "h": 1280
     }
   ]
 }
